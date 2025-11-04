@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        corben: ["Corben", "serif"],
+        comfortaa: ["Comfortaa", "sans-serif"],
+        nunito: ["Nunito", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 }
