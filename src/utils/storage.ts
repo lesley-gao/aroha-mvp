@@ -205,21 +205,20 @@ export function setCloudSyncEnabled(enabled: boolean): void {
 }
 
 /**
- * Get or create anonymous user ID for Supabase
- * @returns The user ID
+ * Get authenticated user ID from Supabase
+ * @returns The user ID or null if not authenticated
  */
-function getUserId(): string {
+async function getUserId(): Promise<string | null> {
   try {
-    let userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
-    if (!userId) {
-      // Generate a random UUID-like ID
-      userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem(STORAGE_KEYS.USER_ID, userId);
+    if (!supabase) {
+      return null;
     }
-    return userId;
+    
+    const { data: { user } } = await supabase.auth.getUser();
+    return user?.id || null;
   } catch (error) {
     console.error('Error getting user ID:', error);
-    return 'user_default';
+    return null;
   }
 }
 
@@ -233,7 +232,12 @@ async function syncRecordToSupabase(record: PHQ9Record): Promise<void> {
   }
 
   try {
-    const userId = getUserId();
+    const userId = await getUserId();
+    if (!userId) {
+      console.error('No authenticated user, skipping sync');
+      return;
+    }
+
     const dbRecord: PHQ9RecordDB = {
       user_id: userId,
       answers: record.answers,
@@ -265,7 +269,11 @@ export async function fetchRecordsFromSupabase(): Promise<PHQ9Record[]> {
   }
 
   try {
-    const userId = getUserId();
+    const userId = await getUserId();
+    if (!userId) {
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('phq9_records')
       .select('*')
@@ -303,7 +311,11 @@ export async function syncAllRecordsToSupabase(): Promise<void> {
 
   try {
     const localRecords = await getRecords();
-    const userId = getUserId();
+    const userId = await getUserId();
+    if (!userId) {
+      console.error('No authenticated user, skipping sync');
+      return;
+    }
 
     // Get existing records from Supabase
     const { data: existingRecords } = await supabase

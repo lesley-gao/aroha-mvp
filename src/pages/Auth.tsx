@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 type TabKey = "login" | "signup";
 
@@ -30,6 +31,9 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
   const [email, setEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [emailConfirmationRequired, setEmailConfirmationRequired] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Card className="grid grid-cols-1 md:grid-cols-2 min-h-screen overflow-hidden rounded-none border-0 shadow-none md:divide-x md:divide-gray-200">
@@ -86,9 +90,61 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
               <form
                 className="space-y-5"
                 noValidate
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  onAuthenticated?.();
+                  setLoginError("");
+                  setIsLoading(true);
+                  
+                  // Validate inputs
+                  if (!email || !loginPassword) {
+                    setLoginError("Please enter both email and password");
+                    setIsLoading(false);
+                    return;
+                  }
+
+                  // Check if Supabase is configured
+                  if (!isSupabaseConfigured() || !supabase) {
+                    setLoginError("Authentication service not configured. Please contact support.");
+                    setIsLoading(false);
+                    return;
+                  }
+
+                  try {
+                    // Sign in with Supabase Auth
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                      email: email,
+                      password: loginPassword,
+                    });
+
+                    if (error) {
+                      console.error('Login error:', error);
+                      if (error.message.includes('Invalid login credentials')) {
+                        setLoginError("Invalid email or password");
+                      } else if (error.message.includes('Email not confirmed')) {
+                        setLoginError("Please verify your email before logging in. Check your inbox for the confirmation email.");
+                      } else if (error.message.includes('Email link is invalid or has expired')) {
+                        setLoginError("Email verification link expired. Please sign up again.");
+                      } else {
+                        setLoginError(`Login failed: ${error.message}`);
+                      }
+                      setIsLoading(false);
+                      return;
+                    }
+
+                    if (data.user) {
+                      // Successful login
+                      console.log('Login successful:', data.user.email);
+                      onAuthenticated?.();
+                    } else {
+                      setLoginError("Login failed. No user data returned.");
+                      setIsLoading(false);
+                    }
+                  } catch (err) {
+                    console.error('Unexpected login error:', err);
+                    setLoginError("Login failed. Please try again.");
+                  } finally {
+                    setIsLoading(false);
+                  }
                 }}
               >
                  {signupSuccess && (
@@ -97,7 +153,20 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                      <div>
                        <AlertTitle>Success! Your account has been created</AlertTitle>
                        <AlertDescription>
-                         You can now log in using your email and password.
+                         {emailConfirmationRequired 
+                           ? "Please verify your email by clicking the link sent to your inbox before logging in."
+                           : "You can now log in using your email and password."}
+                       </AlertDescription>
+                     </div>
+                   </Alert>
+                 )}
+                 {loginError && (
+                   <Alert variant="destructive">
+                     <AlertCircle className="h-5 w-5 mt-0.5" aria-hidden />
+                     <div>
+                       <AlertTitle>Login Failed</AlertTitle>
+                       <AlertDescription>
+                         {loginError}
                        </AlertDescription>
                      </div>
                    </Alert>
@@ -139,24 +208,87 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                       }
                     >
                       <span className="material-symbols-outlined" aria-hidden>
-                        {showPassword ? "visibility_off" : "visibility"}
+                        {showPassword ?  "visibility":"visibility_off"}
                       </span>
                     </button>
                   </div>
                 </div>
-                <Button type="submit" className="w-full h-11 rounded-md">
-                  Log in
+                <Button type="submit" className="w-full h-11 rounded-md" disabled={isLoading}>
+                  {isLoading ? 'Logging in...' : 'Log in'}
                 </Button>
               </form>
             ) : (
                <form
                 className="space-y-5"
                 noValidate
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   if (!passwordsMatch) return;
-                   setSignupSuccess(true);
-                   setActive("login");
+                  
+                  setIsLoading(true);
+                  setLoginError("");
+
+                  // Check if Supabase is configured
+                  if (!isSupabaseConfigured() || !supabase) {
+                    alert("Authentication service not configured. Please contact support.");
+                    setIsLoading(false);
+                    return;
+                  }
+                  
+                  try {
+                    // Sign up with Supabase Auth
+                    const { data, error } = await supabase.auth.signUp({
+                      email: signupEmail,
+                      password: password,
+                      options: {
+                        emailRedirectTo: window.location.origin,
+                      }
+                    });
+
+                    console.log('Signup response:', { data, error });
+
+                    if (error) {
+                      console.error('Signup error:', error);
+                      if (error.message.includes('already registered')) {
+                        alert("An account with this email already exists. Please login instead.");
+                        setActive("login");
+                        setEmail(signupEmail);
+                      } else {
+                        alert(`Signup failed: ${error.message}`);
+                      }
+                      setIsLoading(false);
+                      return;
+                    }
+
+                    if (data.user) {
+                      console.log('User created:', data.user);
+                      
+                      // Check if email confirmation is required
+                      if (data.user.identities && data.user.identities.length === 0) {
+                        // User already exists
+                        alert("An account with this email already exists. Please login instead.");
+                        setActive("login");
+                        setEmail(signupEmail);
+                      } else {
+                        // Check if user needs to confirm email
+                        const needsEmailConfirmation = data.user.confirmed_at === null;
+                        
+                        console.log('Email confirmation required:', needsEmailConfirmation);
+                        console.log('confirmed_at:', data.user.confirmed_at);
+                        
+                        // Set state and switch to login tab
+                        setEmailConfirmationRequired(needsEmailConfirmation);
+                        setSignupSuccess(true);
+                        setEmail(signupEmail);
+                        setActive("login");
+                      }
+                    }
+                  } catch (err) {
+                    console.error('Unexpected signup error:', err);
+                    alert("Signup failed. Please try again.");
+                  } finally {
+                    setIsLoading(false);
+                  }
                 }}
               >
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">
@@ -265,12 +397,12 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                  <Button
                   type="submit"
                   className="w-full h-11 rounded-md"
-                   disabled={!passwordsMatch || signupEmail.trim().length === 0}
+                   disabled={!passwordsMatch || signupEmail.trim().length === 0 || isLoading}
                    aria-disabled={
-                     !passwordsMatch || signupEmail.trim().length === 0
+                     !passwordsMatch || signupEmail.trim().length === 0 || isLoading
                    }
                 >
-                  Continue
+                  {isLoading ? 'Creating account...' : 'Continue'}
                 </Button>
               </form>
             )}
