@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ConsentModal } from "@/pages/Consent";
 import { PrivacyPage } from "@/pages/Privacy";
+import { Home } from "@/pages/Home";
 import { PHQ9 } from "@/pages/PHQ9";
 import { History } from "@/pages/History";
 import { Settings } from "@/pages/Settings";
@@ -28,6 +29,7 @@ import {
   LockClosedIcon,
   Pencil2Icon,
   ExitIcon,
+  HomeIcon,
 } from "@radix-ui/react-icons";
 import "./App.css";
 
@@ -151,16 +153,17 @@ function AppContent() {
       >
         <div className="app">
           <header className="app-header" role="banner">
-            <div className="relative flex items-center mb-4 pt-8">
-              <img
-                src="/logo.png"
-                alt="Aroha - Mental Health Support"
-                className="h-14 object-contain"
-              />
+            <div className="flex items-center justify-between mb-4 pt-8">
+              <Link to="/">
+                <img
+                  src="/logo.png"
+                  alt="Aroha - Mental Health Support"
+                  className="h-14 object-contain"
+                />
+              </Link>
               <nav
                 role="navigation"
                 aria-label="Main navigation"
-                className="absolute left-1/2 -translate-x-1/2"
               >
                 <div
                   className="inline-flex items-center gap-2 rounded-full bg-indigo-50/80 backdrop-blur px-2 py-2 ring-1 ring-indigo-100 shadow-sm"
@@ -179,6 +182,22 @@ function AppContent() {
                       aria-current={isActive("/") ? "page" : undefined}
                       role="tab"
                       aria-selected={isActive("/")}
+                    >
+                      <HomeIcon className="mr-2 h-4 w-4" aria-hidden /> Home
+                    </Button>
+                  </Link>
+                  <Link to="/phq9">
+                    <Button
+                      variant="ghost"
+                      className={
+                        (isActive("/phq9")
+                          ? "bg-indigo-100 text-gray-900 shadow-sm "
+                          : "text-gray-700 hover:text-gray-900 ") +
+                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
+                      }
+                      aria-current={isActive("/phq9") ? "page" : undefined}
+                      role="tab"
+                      aria-selected={isActive("/phq9")}
                     >
                       <ReaderIcon className="mr-2 h-4 w-4" aria-hidden /> PHQ-9
                     </Button>
@@ -262,7 +281,8 @@ function AppContent() {
           </header>
           <main id="main-content" className="py-8 px-4" role="main">
             <Routes>
-              <Route path="/" element={<PHQ9 locale={locale} />} />
+              <Route path="/" element={<Home locale={locale} />} />
+              <Route path="/phq9" element={<PHQ9 locale={locale} />} />
               <Route path="/diary" element={<Diary locale={locale} />} />
               <Route
                 path="/diary/:date"
