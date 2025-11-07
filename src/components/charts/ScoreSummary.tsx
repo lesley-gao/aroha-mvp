@@ -3,57 +3,23 @@
  * Displays current score, trend, and statistics for PHQ-9 assessments
  */
 
-import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import type { ScoreSummary } from '../../utils/chartUtils';
 import { getSeverityColor, getSeverityLabel } from '../../utils/chartUtils';
+import { getSeverityBgColor, type SeverityLevel } from '../../utils/severity';
 
 interface ScoreSummaryProps {
   summary: ScoreSummary;
   currentSeverity: string;
   locale?: string;
+  trend?: { direction: 'up' | 'down' | 'stable'; change: number } | null;
 }
 
-export function ScoreSummaryCard({ summary, currentSeverity, locale = 'en' }: ScoreSummaryProps) {
+export function ScoreSummaryCard({ summary, currentSeverity, locale = 'en', trend }: ScoreSummaryProps) {
   const t = getTranslations(locale);
 
-  // Trend icon and color
-  const getTrendDisplay = () => {
-    switch (summary.trend) {
-      case 'improving':
-        return {
-          icon: <TrendingDown className="w-5 h-5" />,
-          color: 'text-green-600',
-          bgColor: 'bg-green-50',
-          text: t.improving,
-        };
-      case 'worsening':
-        return {
-          icon: <TrendingUp className="w-5 h-5" />,
-          color: 'text-red-600',
-          bgColor: 'bg-red-50',
-          text: t.worsening,
-        };
-      case 'stable':
-        return {
-          icon: <Minus className="w-5 h-5" />,
-          color: 'text-blue-600',
-          bgColor: 'bg-blue-50',
-          text: t.stable,
-        };
-      default:
-        return {
-          icon: <Minus className="w-5 h-5" />,
-          color: 'text-gray-600',
-          bgColor: 'bg-gray-50',
-          text: t.insufficient_data,
-        };
-    }
-  };
-
-  const trendDisplay = getTrendDisplay();
-
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
         {t.title}
       </h3>
@@ -61,38 +27,53 @@ export function ScoreSummaryCard({ summary, currentSeverity, locale = 'en' }: Sc
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Current Score */}
         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <p className=" text-gray-600 dark:text-gray-400 mb-1">
             {t.currentScore}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {summary.current ?? '—'}
           </p>
           {summary.current !== null && (
-            <p className="text-sm mt-1" style={{ color: getSeverityColor(currentSeverity) }}>
+            <span className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium ${getSeverityBgColor(currentSeverity as SeverityLevel)} ${getSeverityColor(currentSeverity as SeverityLevel)}`}>
               {getSeverityLabel(currentSeverity)}
-            </p>
+            </span>
           )}
         </div>
 
-        {/* Trend */}
+        {/* Trend Comparison */}
         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <p className=" text-gray-600 dark:text-gray-400 mb-1">
             {t.trend}
           </p>
-          <div className={`flex items-center gap-2 ${trendDisplay.color}`}>
-            {trendDisplay.icon}
-            <span className="text-lg font-semibold">{trendDisplay.text}</span>
-          </div>
-          {summary.trendPercentage > 0 && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {summary.trendPercentage}% {t.change}
-            </p>
+          {trend ? (
+            <div className="flex items-start gap-2 mt-2">
+              <TrendingUp className={`h-5 w-5 mt-0.5 ${
+                trend.direction === 'down' ? 'text-green-600 rotate-180' :
+                trend.direction === 'up' ? 'text-amber-600' :
+                'text-gray-600 rotate-90'
+              }`} />
+              <div>
+                <p className="font-medium">
+                  {trend.direction === 'down' && locale === 'en' && `Decreased by ${trend.change} points`}
+                  {trend.direction === 'down' && locale === 'mi' && `Kua heke ${trend.change} piro`}
+                  {trend.direction === 'up' && locale === 'en' && `Increased by ${trend.change} points`}
+                  {trend.direction === 'up' && locale === 'mi' && `Kua piki ${trend.change} piro`}
+                  {trend.direction === 'stable' && locale === 'en' && 'Unchanged'}
+                  {trend.direction === 'stable' && locale === 'mi' && 'Kāore i rerekē'}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  {locale === 'en' ? 'vs previous' : 'vs o mua'}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">—</p>
           )}
         </div>
 
         {/* Average Score */}
         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <p className=" text-gray-600 dark:text-gray-400 mb-1">
             {t.averageScore}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
@@ -105,31 +86,6 @@ export function ScoreSummaryCard({ summary, currentSeverity, locale = 'en' }: Sc
           )}
         </div>
       </div>
-
-      {/* Additional Info */}
-      {summary.trend === 'improving' && (
-        <div className={`mt-4 p-3 rounded-lg ${trendDisplay.bgColor}`}>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            💚 {t.improvingMessage}
-          </p>
-        </div>
-      )}
-
-      {summary.trend === 'worsening' && (
-        <div className={`mt-4 p-3 rounded-lg ${trendDisplay.bgColor}`}>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            ⚠️ {t.worseningMessage}
-          </p>
-        </div>
-      )}
-
-      {summary.trend === 'insufficient_data' && (
-        <div className={`mt-4 p-3 rounded-lg ${trendDisplay.bgColor}`}>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            ℹ️ {t.insufficientDataMessage}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

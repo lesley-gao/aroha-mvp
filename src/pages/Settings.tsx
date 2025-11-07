@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -208,8 +209,8 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                     ? 'Manage your data, review our privacy practices, and control what information is stored.'
                     : 'Whakahaere i ō raraunga, arotake i ā mātou tikanga tūmataiti, me te whakahaere i ngā mōhiohio e tiakina ana.'}
                 </p>
-                <Button variant="outline" onClick={() => window.location.hash = '#privacy'}>
-                  {locale === 'en' ? 'Go to Privacy Settings' : 'Haere ki ngā Tautuhinga Tūmataiti'}
+                <Button variant="outline" asChild>
+                  <Link to="/privacy">{locale === 'en' ? 'Go to Privacy Settings' : 'Haere ki ngā Tautuhinga Tūmataiti'}</Link>
                 </Button>
               </CardContent>
             </Card>

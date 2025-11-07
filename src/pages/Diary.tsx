@@ -4,6 +4,15 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { 
+  Timeline, 
+  TimelineItem, 
+  TimelineDot, 
+  TimelineContent, 
+  TimelineTime, 
+  TimelineTitle, 
+  TimelineDescription 
+} from '@/components/ui/timeline';
 import { Save, Calendar, Eye, X, ArrowDown } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { BrowserSpeechToText } from '@/components/speech/BrowserSpeechToText';
@@ -78,13 +87,14 @@ export default function Diary({ locale }: DiaryProps) {
   }, []);
 
   useEffect(() => {
-    // Check if there's a date query parameter
+    // Only load entry if there's a date query parameter from navigation
     const dateParam = searchParams.get('date');
     if (dateParam) {
       setSelectedDate(dateParam);
+      loadEntryForDate(dateParam);
     }
-    loadEntryForDate(selectedDate);
-  }, [selectedDate, searchParams]);
+    // Don't auto-load for selectedDate changes - only when user clicks a date
+  }, [searchParams]);
 
   const loadEntries = async () => {
     setIsLoading(true);
@@ -325,58 +335,54 @@ export default function Diary({ locale }: DiaryProps) {
           </Card>
         </div>
 
-        {/* Recent entries sidebar */}
+        {/* Recent entries sidebar - Timeline */}
         <div className="lg:col-span-1">
-          <Card className="p-4">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900">Recent Entries</h2>
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-6 text-gray-900">Recent Entries</h2>
             
             {isLoading ? (
               <div className="text-center text-gray-500 py-4">Loading...</div>
             ) : entries.length === 0 ? (
               <div className="text-center text-gray-500 py-4 text-base">{t.noEntries}</div>
             ) : (
-              <div className="space-y-2">
+              <Timeline>
                 {entries.slice(0, 10).map((entry) => (
-                  <div
-                    key={entry.id}
-                    className={`w-full px-3 py-2 rounded-md text-base transition-colors border ${
-                      entry.entry_date === selectedDate
-                        ? 'bg-indigo-50 border-indigo-200 text-indigo-900'
-                        : 'border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    <button
-                      onClick={() => setSelectedDate(entry.entry_date)}
-                      className="w-full text-left mb-2"
-                    >
-                      <div className="font-medium">
-                        {new Date(entry.entry_date).toLocaleDateString(locale === 'mi' ? 'mi-NZ' : 'en-NZ', {
-                          weekday: 'short',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </div>
-                      {entry.title && (
-                        <div className="text-xs font-semibold text-gray-700 truncate mt-1">
-                          {entry.title}
-                        </div>
-                      )}
-                      <div className="text-xs text-gray-500 truncate">
-                        {entry.content.substring(0, 50)}...
-                      </div>
-                    </button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/diary/${entry.entry_date}`)}
-                      className="w-full gap-2 text-xs"
-                    >
-                      <Eye className="w-3 h-3" />
-                      View Full Entry
-                    </Button>
-                  </div>
+                  <TimelineItem key={entry.id} isActive={entry.entry_date === selectedDate}>
+                    <TimelineDot isActive={entry.entry_date === selectedDate} />
+                    <TimelineContent>
+                      <button
+                        onClick={() => setSelectedDate(entry.entry_date)}
+                        className="w-full text-left group"
+                      >
+                        <TimelineTime className={entry.entry_date === selectedDate ? 'text-indigo-600' : ''}>
+                          {new Date(entry.entry_date).toLocaleDateString(locale === 'mi' ? 'mi-NZ' : 'en-NZ', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </TimelineTime>
+                        {entry.title && (
+                          <TimelineTitle className="mt-1 truncate group-hover:text-indigo-600 transition-colors">
+                            {entry.title}
+                          </TimelineTitle>
+                        )}
+                        <TimelineDescription className="mt-1 line-clamp-2">
+                          {entry.content.substring(0, 80)}...
+                        </TimelineDescription>
+                      </button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/diary/${entry.entry_date}`)}
+                        className="w-full gap-2 text-xs mt-2"
+                      >
+                        <Eye className="w-3 h-3" />
+                        View Full
+                      </Button>
+                    </TimelineContent>
+                  </TimelineItem>
                 ))}
-              </div>
+              </Timeline>
             )}
           </Card>
         </div>

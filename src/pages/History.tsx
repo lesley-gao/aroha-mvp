@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getMergedRecords, type PHQ9Record } from '@/utils/storage';
-import { getSeverityColor, getSeverityBgColor, type SeverityLevel } from '@/utils/severity';
 import { getMessages, type Locale } from '@/i18n/messages';
-import { FileDown, Calendar, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FileDown, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PHQ9LineChart } from '@/components/charts/PHQ9LineChart';
 import { ScoreSummaryCard } from '@/components/charts/ScoreSummary';
 import { transformToChartData, calculateScoreSummary } from '@/utils/chartUtils';
@@ -59,6 +58,24 @@ export function History({ locale, onExportPDF }: HistoryProps) {
       case 'Severe': return messages.severitySevere;
       default: return severity;
     }
+  };
+
+  const getSeverityStyles = (severity: string): { backgroundColor: string; color: string } => {
+    const severityLower = severity.toLowerCase();
+    
+    if (severityLower.includes('minimal')) {
+      return { backgroundColor: '#f0fdf4', color: '#16a34a' }; // green-50, green-600
+    } else if (severityLower.includes('mild')) {
+      return { backgroundColor: '#fefce8', color: '#ca8a04' }; // yellow-50, yellow-600
+    } else if (severityLower.includes('moderate') && !severityLower.includes('severe')) {
+      return { backgroundColor: '#fff7ed', color: '#ea580c' }; // orange-50, orange-600
+    } else if (severityLower.includes('moderately severe') || severityLower.includes('moderately-severe')) {
+      return { backgroundColor: '#fef2f2', color: '#dc2626' }; // red-50, red-600
+    } else if (severityLower.includes('severe')) {
+      return { backgroundColor: '#fee2e2', color: '#b91c1c' }; // red-100, red-700
+    }
+    
+    return { backgroundColor: '#f9fafb', color: '#4b5563' }; // gray-50, gray-600
   };
 
   const calculateTrend = (): { direction: 'up' | 'down' | 'stable'; change: number } | null => {
@@ -145,39 +162,8 @@ export function History({ locale, onExportPDF }: HistoryProps) {
                 summary={calculateScoreSummary(records)}
                 currentSeverity={records[0].severity}
                 locale={locale}
+                trend={trend}
               />
-
-              {/* Trend indicator */}
-              {trend && (
-                <Card className={`${
-                  trend.direction === 'down' ? 'bg-green-50 border-green-200' :
-                  trend.direction === 'up' ? 'bg-amber-50 border-amber-200' :
-                  'bg-gray-50 border-gray-200'
-                }`}>
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3">
-                      <TrendingUp className={`h-5 w-5 ${
-                        trend.direction === 'down' ? 'text-green-600 rotate-180' :
-                        trend.direction === 'up' ? 'text-amber-600' :
-                        'text-gray-600 rotate-90'
-                      }`} />
-                      <div>
-                        <p className="text-sm font-medium">
-                          {trend.direction === 'down' && locale === 'en' && `Score decreased by ${trend.change} points`}
-                          {trend.direction === 'down' && locale === 'mi' && `Kua heke te kaute ${trend.change} piro`}
-                          {trend.direction === 'up' && locale === 'en' && `Score increased by ${trend.change} points`}
-                          {trend.direction === 'up' && locale === 'mi' && `Kua piki te kaute ${trend.change} piro`}
-                          {trend.direction === 'stable' && locale === 'en' && 'Score unchanged'}
-                          {trend.direction === 'stable' && locale === 'mi' && 'Kāore i rerekē te kaute'}
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          {locale === 'en' ? 'Compared to previous assessment' : 'I te whakataurite ki te aromatawai o mua'}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
 
               {/* Line Chart */}
               <Card>
@@ -213,7 +199,13 @@ export function History({ locale, onExportPDF }: HistoryProps) {
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getSeverityBgColor(record.severity as SeverityLevel)} ${getSeverityColor(record.severity as SeverityLevel)}`}>
+                        <span 
+                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                          style={{
+                            ...getSeverityStyles(record.severity),
+                            border: '1px solid rgba(0,0,0,0.1)'
+                          }}
+                        >
                           {getSeverityLabel(record.severity)}
                         </span>
                         <span className="text-2xl font-bold text-gray-900">
