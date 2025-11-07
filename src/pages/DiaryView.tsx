@@ -210,10 +210,10 @@ export function DiaryView({ locale }: DiaryViewProps) {
           {/* Entry Header */}
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <h1 className=" text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {entry.title || t.untitled}
               </h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 " style={{  color: '#6b7280' }}>
                 <Calendar className="h-4 w-4" />
                 <span>{formatDisplayDate(entry.entry_date)}</span>
               </div>
@@ -228,14 +228,14 @@ export function DiaryView({ locale }: DiaryViewProps) {
         <CardContent>
           {/* Entry Content */}
           <div className="prose prose-slate dark:prose-invert max-w-none">
-            <div className="whitespace-pre-wrap text-gray-700 dark:text-gray-300 leading-relaxed">
+            <div className="whitespace-pre-wrap text-gray-700 dark:text-gray-300 leading-relaxed" >
               {entry.content}
             </div>
           </div>
 
           {/* Entry Metadata */}
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between text-xs text-gray-500">
+            <div className="flex items-center justify-between text-gray-500"  >
               <div>
                 {t.created}: {format(new Date(entry.created_at), 'PPp')}
               </div>

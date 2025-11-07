@@ -143,7 +143,7 @@ export function SpeechToText({ onTranscript, locale, className = '' }: SpeechToT
 
   if (!isSupported) {
     return (
-      <div className={`flex items-center gap-2 text-sm text-gray-500 ${className}`}>
+      <div className={`flex items-center gap-2  text-gray-500 ${className}`}>
         <Volume2 className="h-4 w-4" />
         <span>{t.notSupported}</span>
       </div>
@@ -174,7 +174,7 @@ export function SpeechToText({ onTranscript, locale, className = '' }: SpeechToT
         </Button>
         
         {isListening && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-gray-600">
             <div className="flex gap-1">
               <span className="w-1 h-4 bg-red-500 rounded animate-pulse" style={{ animationDelay: '0ms' }} />
               <span className="w-1 h-4 bg-red-500 rounded animate-pulse" style={{ animationDelay: '150ms' }} />

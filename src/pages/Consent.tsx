@@ -53,7 +53,7 @@ export function ConsentModal({ locale, onConsent }: ConsentModalProps) {
             
             <div className="bg-[#D1F08B] border-l-4 border-[#009490] p-4 my-4">
               <h4 className="font-semibold mb-2">What you should know:</h4>
-              <ul className="text-sm space-y-2 list-disc list-inside">
+              <ul className="space-y-2 list-disc list-inside">
                 <li>Your data never leaves this device automatically</li>
                 <li>No account or login required</li>
                 <li>You control all exports and sharing</li>
@@ -61,7 +61,7 @@ export function ConsentModal({ locale, onConsent }: ConsentModalProps) {
               </ul>
             </div>
 
-            <p className="text-sm text-gray-500 italic">{messages.disclaimer}</p>
+            <p className=" text-gray-500 italic">{messages.disclaimer}</p>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

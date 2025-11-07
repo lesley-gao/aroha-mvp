@@ -83,7 +83,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                       <Label htmlFor="lang-en" className="cursor-pointer font-normal">
                         <div>
                           <div className="font-medium">English</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="  text-gray-500">
                             Display all content in English
                           </div>
                         </div>
@@ -94,7 +94,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                       <Label htmlFor="lang-mi" className="cursor-pointer font-normal">
                         <div>
                           <div className="font-medium">Te Reo Māori</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="  text-gray-500">
                             {locale === 'en' 
                               ? 'Display all content in te reo Māori' 
                               : 'Whakaatuhia ngā ihirangi katoa i te reo Māori'}
@@ -137,7 +137,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                           {locale === 'en' ? 'Enable Cloud Sync' : 'Whakahohe i te Tukutahi Kapua'}
                         </Label>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="  text-gray-600">
                         {locale === 'en'
                           ? 'Securely backup your PHQ-9 records to the cloud. Your data will be encrypted and accessible from any device.'
                           : 'Kia haumaru te tiaki tuauri i ō pūkete PHQ-9 ki te kapua. Ka whakamunaina ō raraunga ka taea te uru mai i tētahi pūrere.'}
@@ -203,7 +203,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
             </div>
             <Card className="bg-gray-50">
               <CardContent className="pt-6">
-                <p className="text-sm text-gray-700 mb-4">
+                <p className="  text-gray-700 mb-4">
                   {locale === 'en'
                     ? 'Manage your data, review our privacy practices, and control what information is stored.'
                     : 'Whakahaere i ō raraunga, arotake i ā mātou tikanga tūmataiti, me te whakahaere i ngā mōhiohio e tiakina ana.'}
@@ -229,7 +229,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                   <h4 className="font-medium text-gray-900 mb-2">
                     {locale === 'en' ? 'About Aroha' : 'Mō Aroha'}
                   </h4>
-                  <p className="text-sm text-gray-700">
+                  <p className="  text-gray-700">
                     {locale === 'en'
                       ? 'Aroha is a mental health support tool designed to help young people in New Zealand monitor their wellbeing using the PHQ-9 depression screening questionnaire.'
                       : 'Ko Aroha he taputapu tautoko hauora hinengaro i hangaia hei āwhina i ngā taiohi o Aotearoa ki te aroturuki i tō rātou oranga mā te whakamahi i te pātai aromātai pōuri PHQ-9.'}
@@ -240,14 +240,14 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
                   <h4 className="font-medium text-gray-900 mb-2">
                     {locale === 'en' ? 'Version' : 'Putanga'}
                   </h4>
-                  <p className="text-sm text-gray-700">0.1.0 (MVP)</p>
+                  <p className="  text-gray-700">0.1.0 (MVP)</p>
                 </div>
 
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">
                     {locale === 'en' ? 'Translation Attribution' : 'Tohu Whakamāoritanga'}
                   </h4>
-                  <p className="text-sm text-gray-700">
+                  <p className="  text-gray-700">
                     {messages.translationAttribution}
                   </p>
                 </div>
@@ -265,7 +265,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
 
           {/* Disclaimer */}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-sm text-amber-900">
+            <p className="  text-amber-900">
               <strong>{locale === 'en' ? 'Important:' : 'Tino nui:'}</strong> {messages.disclaimer}
             </p>
           </div>

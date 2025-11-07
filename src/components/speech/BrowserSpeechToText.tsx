@@ -221,7 +221,7 @@ export function BrowserSpeechToText({
 
         {/* Recording Duration */}
         {isRecording && (
-          <div className="flex items-center gap-2 text-sm text-red-600 animate-pulse">
+          <div className="flex items-center gap-2   text-red-600 animate-pulse">
             <div className="w-2 h-2 bg-red-600 rounded-full" />
             {t.recordingTime}: {formatDuration(recordingDuration)}
           </div>
@@ -232,7 +232,7 @@ export function BrowserSpeechToText({
       {isRecording && currentTranscript && (
         <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
           <div className="text-xs text-blue-600 font-medium mb-1">Live Transcript:</div>
-          <div className="text-sm text-blue-900">{currentTranscript}</div>
+          <div className="  text-blue-900">{currentTranscript}</div>
         </div>
       )}
 
@@ -240,7 +240,7 @@ export function BrowserSpeechToText({
       {error && (
         <div className="p-3 bg-red-50 rounded-lg border border-red-200">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-red-700">
+            <div className="  text-red-700">
               <div className="font-medium">{t.error}</div>
               <div>{error}</div>
             </div>
@@ -256,7 +256,7 @@ export function BrowserSpeechToText({
       )}
 
       {/* Help Text */}
-      <div className="text-xs text-gray-500">
+      <div className=" text-gray-500">
         {locale === 'en' 
           ? 'Using browser speech recognition. Please make sure you are connected to the internet.'
           : 'Mā te whakamātautau kōrero pūtirotiro. Me whai hononga ipurangi.'}

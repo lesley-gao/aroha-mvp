@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { getMergedRecords, type PHQ9Record } from '@/utils/storage';
 import { getSeverityColor, getSeverityBgColor, type SeverityLevel } from '@/utils/severity';
 import { getMessages, type Locale } from '@/i18n/messages';
-import { FileDown, Calendar, TrendingUp } from 'lucide-react';
+import { FileDown, Calendar, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PHQ9LineChart } from '@/components/charts/PHQ9LineChart';
 import { ScoreSummaryCard } from '@/components/charts/ScoreSummary';
 import { transformToChartData, calculateScoreSummary } from '@/utils/chartUtils';
@@ -14,10 +14,13 @@ interface HistoryProps {
   onExportPDF?: () => void;
 }
 
+const RECORDS_PER_PAGE = 10;
+
 export function History({ locale, onExportPDF }: HistoryProps) {
   const messages = getMessages(locale);
   const [records, setRecords] = useState<PHQ9Record[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     loadRecords();
@@ -71,6 +74,17 @@ export function History({ locale, onExportPDF }: HistoryProps) {
   };
 
   const trend = calculateTrend();
+
+  // Pagination calculations
+  const totalPages = Math.ceil(records.length / RECORDS_PER_PAGE);
+  const startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+  const endIndex = startIndex + RECORDS_PER_PAGE;
+  const currentRecords = records.slice(startIndex, endIndex);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   if (isLoading) {
     return (
@@ -133,6 +147,38 @@ export function History({ locale, onExportPDF }: HistoryProps) {
                 locale={locale}
               />
 
+              {/* Trend indicator */}
+              {trend && (
+                <Card className={`${
+                  trend.direction === 'down' ? 'bg-green-50 border-green-200' :
+                  trend.direction === 'up' ? 'bg-amber-50 border-amber-200' :
+                  'bg-gray-50 border-gray-200'
+                }`}>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-3">
+                      <TrendingUp className={`h-5 w-5 ${
+                        trend.direction === 'down' ? 'text-green-600 rotate-180' :
+                        trend.direction === 'up' ? 'text-amber-600' :
+                        'text-gray-600 rotate-90'
+                      }`} />
+                      <div>
+                        <p className="text-sm font-medium">
+                          {trend.direction === 'down' && locale === 'en' && `Score decreased by ${trend.change} points`}
+                          {trend.direction === 'down' && locale === 'mi' && `Kua heke te kaute ${trend.change} piro`}
+                          {trend.direction === 'up' && locale === 'en' && `Score increased by ${trend.change} points`}
+                          {trend.direction === 'up' && locale === 'mi' && `Kua piki te kaute ${trend.change} piro`}
+                          {trend.direction === 'stable' && locale === 'en' && 'Score unchanged'}
+                          {trend.direction === 'stable' && locale === 'mi' && 'Kāore i rerekē te kaute'}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {locale === 'en' ? 'Compared to previous assessment' : 'I te whakataurite ki te aromatawai o mua'}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Line Chart */}
               <Card>
                 <CardHeader>
@@ -153,41 +199,9 @@ export function History({ locale, onExportPDF }: HistoryProps) {
             </div>
           )}
 
-          {/* Trend indicator */}
-          {trend && (
-            <Card className={`${
-              trend.direction === 'down' ? 'bg-green-50 border-green-200' :
-              trend.direction === 'up' ? 'bg-amber-50 border-amber-200' :
-              'bg-gray-50 border-gray-200'
-            }`}>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <TrendingUp className={`h-5 w-5 ${
-                    trend.direction === 'down' ? 'text-green-600 rotate-180' :
-                    trend.direction === 'up' ? 'text-amber-600' :
-                    'text-gray-600 rotate-90'
-                  }`} />
-                  <div>
-                    <p className="text-sm font-medium">
-                      {trend.direction === 'down' && locale === 'en' && `Score decreased by ${trend.change} points`}
-                      {trend.direction === 'down' && locale === 'mi' && `Kua heke te kaute ${trend.change} piro`}
-                      {trend.direction === 'up' && locale === 'en' && `Score increased by ${trend.change} points`}
-                      {trend.direction === 'up' && locale === 'mi' && `Kua piki te kaute ${trend.change} piro`}
-                      {trend.direction === 'stable' && locale === 'en' && 'Score unchanged'}
-                      {trend.direction === 'stable' && locale === 'mi' && 'Kāore i rerekē te kaute'}
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      {locale === 'en' ? 'Compared to previous assessment' : 'I te whakataurite ki te aromatawai o mua'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Records list */}
           <div className="space-y-4">
-            {records.map((record) => (
+            {currentRecords.map((record) => (
               <Card key={record.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between gap-4">
@@ -229,6 +243,53 @@ export function History({ locale, onExportPDF }: HistoryProps) {
               </Card>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="text-sm text-gray-600">
+                {locale === 'en' 
+                  ? `Showing ${startIndex + 1}-${Math.min(endIndex, records.length)} of ${records.length} assessments`
+                  : `E whakaatu ana ${startIndex + 1}-${Math.min(endIndex, records.length)} o ${records.length} aromatawai`
+                }
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  {locale === 'en' ? 'Previous' : 'O Mua'}
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => goToPage(page)}
+                      className="min-w-[2.5rem]"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  {locale === 'en' ? 'Next' : 'E Haere Ana'}
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

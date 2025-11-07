@@ -96,7 +96,7 @@ export function PHQ9({ locale }: PHQ9Props) {
         </CardHeader>
         <CardContent className="space-y-8">
           {/* Disclaimer */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4   text-blue-900">
             {messages.disclaimer}
           </div>
 
@@ -135,7 +135,7 @@ export function PHQ9({ locale }: PHQ9Props) {
           {hasAnswers && (
             <div className="bg-gray-50 border rounded-lg p-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="  font-medium text-gray-700">
                   Latest Score:
                 </span>
                 <span className={`text-lg font-bold ${getSeverityColor(severity)}`}>
@@ -143,7 +143,7 @@ export function PHQ9({ locale }: PHQ9Props) {
                 </span>
               </div>
               {isFormValid() && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="  text-gray-600 mt-2">
                   {severity === 'Minimal' && messages.severityMinimal}
                   {severity === 'Mild' && messages.severityMild}
                   {severity === 'Moderate' && messages.severityModerate}
@@ -166,7 +166,7 @@ export function PHQ9({ locale }: PHQ9Props) {
             {showSuccess && (
               <div className="flex items-center gap-2 text-green-600">
                 <CheckCircle2 className="h-5 w-5" />
-                <span className="text-sm font-medium">
+                <span className="  font-medium">
                   Saved successfully!
                 </span>
               </div>
@@ -180,22 +180,22 @@ export function PHQ9({ locale }: PHQ9Props) {
                 <div className="flex gap-3">
                   <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div className="space-y-2">
-                    <p className="text-sm text-amber-900 font-medium">
+                    <p className="  text-amber-900 font-medium">
                       {shouldEscalate(currentTotal) 
                         ? messages.crisisTitle
                         : 'Consider Seeking Support'}
                     </p>
-                    <p className="text-sm text-amber-800">
+                    <p className="  text-amber-800">
                       {shouldEscalate(currentTotal)
                         ? messages.escalationText
                         : messages.nudgeText}
                     </p>
                     {shouldEscalate(currentTotal) && (
                       <div className="mt-3 space-y-2">
-                        <p className="text-sm font-semibold text-amber-900">
+                        <p className="  font-semibold text-amber-900">
                           {messages.crisisText}
                         </p>
-                        <ul className="text-sm text-amber-800 space-y-1">
+                        <ul className="  text-amber-800 space-y-1">
                           <li>📞 <strong>111</strong> - Emergency Services</li>
                           <li>📞 <strong>0800 543 354</strong> - Lifeline</li>
                           <li>📞 <strong>1737</strong> - Need to Talk</li>

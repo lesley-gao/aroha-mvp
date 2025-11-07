@@ -223,7 +223,7 @@ export function AISpeechToText({
 
         {/* Recording Duration */}
         {isRecording && (
-          <div className="flex items-center gap-2 text-sm text-red-600 animate-pulse">
+          <div className="flex items-center gap-2  text-red-600 animate-pulse">
             <div className="w-2 h-2 bg-red-600 rounded-full" />
             {t.recordingTime}: {formatDuration(recordingDuration)}
           </div>
@@ -233,7 +233,7 @@ export function AISpeechToText({
       {/* Processing Status */}
       {isProcessing && (
         <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="flex items-center gap-2 text-sm text-blue-700">
+          <div className="flex items-center gap-2  text-blue-700">
             <Loader2 className="w-4 h-4 animate-spin" />
             <div>
               <div className="font-medium">{t.transcribing}</div>
@@ -249,7 +249,7 @@ export function AISpeechToText({
       {error && (
         <div className="p-3 bg-red-50 rounded-lg border border-red-200">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-red-700">
+            <div className=" text-red-700">
               <div className="font-medium">{t.error}</div>
               <div>{error}</div>
             </div>

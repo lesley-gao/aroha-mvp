@@ -41,7 +41,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
       <div className="py-8 px-6 md:py-16 md:px-16 flex flex-col min-h-screen md:min-h-0">
         {/* Logo */}
         <div className="mb-12">
-          <div className="h-8 w-20 rounded bg-gray-900/90 text-white flex items-center justify-center text-sm font-semibold">
+          <div className="h-8 w-20 rounded bg-gray-900/90 text-white flex items-center justify-center font-semibold">
             Logo
           </div>
         </div>
@@ -373,7 +373,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2">
                   <span
                     className={
                       passwordsMatch ? "text-emerald-600" : "text-gray-400"

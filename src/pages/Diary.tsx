@@ -224,7 +224,7 @@ export default function Diary({ locale }: DiaryProps) {
         <div className="lg:col-span-2">
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <label htmlFor="entry-date" className="text-sm font-medium text-gray-700 flex items-center">
+              <label htmlFor="entry-date" className="text-base font-medium text-gray-700 flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
                 {t.selectDate}
               </label>
@@ -238,7 +238,7 @@ export default function Diary({ locale }: DiaryProps) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="entry-title" className="text-sm font-medium text-gray-700 mb-2 block">
+              <label htmlFor="entry-title" className="text-base font-medium text-gray-700 mb-2 block">
                 {t.entryTitle}
               </label>
               <Input
@@ -275,7 +275,7 @@ export default function Diary({ locale }: DiaryProps) {
             {aiSummary && (
               <div className="mb-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-indigo-900">✨ {t.aiSummary}</span>
+                  <span className="text-base font-medium text-indigo-900">✨ {t.aiSummary}</span>
                   <div className="ml-auto flex gap-2">
                     <button
                       onClick={handleInsertSummary}
@@ -292,14 +292,14 @@ export default function Diary({ locale }: DiaryProps) {
                     </button>
                   </div>
                 </div>
-                <div className="text-sm text-indigo-800 whitespace-pre-line">
+                <div className="text-base text-indigo-800 whitespace-pre-line">
                   {aiSummary}
                 </div>
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">
+              <span className="text-base text-gray-500">
                 {currentEntry.length} {t.characters}
               </span>
               <div className="flex gap-2">
@@ -333,13 +333,13 @@ export default function Diary({ locale }: DiaryProps) {
             {isLoading ? (
               <div className="text-center text-gray-500 py-4">Loading...</div>
             ) : entries.length === 0 ? (
-              <div className="text-center text-gray-500 py-4 text-sm">{t.noEntries}</div>
+              <div className="text-center text-gray-500 py-4 text-base">{t.noEntries}</div>
             ) : (
               <div className="space-y-2">
                 {entries.slice(0, 10).map((entry) => (
                   <div
                     key={entry.id}
-                    className={`w-full px-3 py-2 rounded-md text-sm transition-colors border ${
+                    className={`w-full px-3 py-2 rounded-md text-base transition-colors border ${
                       entry.entry_date === selectedDate
                         ? 'bg-indigo-50 border-indigo-200 text-indigo-900'
                         : 'border-gray-200 hover:bg-gray-50'

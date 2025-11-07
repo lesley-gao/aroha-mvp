@@ -90,13 +90,13 @@ export function PrivacyPage({ locale }: PrivacyPageProps) {
               <Info className="h-4 w-4" />
               Local Storage Only
             </h3>
-            <p className="text-sm text-green-800">
+            <p className=" text-green-800">
               All your assessment data is stored only on this device in your browser's local storage. 
               No data is sent to external servers or cloud services.
             </p>
           </div>
 
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 text-gray-700">
             <p>
               <strong>What we store:</strong> PHQ-9 assessment responses, scores, dates, language preference, and consent status.
             </p>
@@ -120,7 +120,7 @@ export function PrivacyPage({ locale }: PrivacyPageProps) {
           <CardDescription>Download all your data as a JSON file</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-700 mb-4">
+          <p className=" text-gray-700 mb-4">
             Export all your assessment records, settings, and data in JSON format. 
             You can share this file with a healthcare provider or keep it as a backup.
           </p>
@@ -146,7 +146,7 @@ export function PrivacyPage({ locale }: PrivacyPageProps) {
           <CardDescription>Permanently remove all your data from this device</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-700 mb-4">
+          <p className=" text-gray-700 mb-4">
             This will permanently delete all your PHQ-9 assessments, history, and settings. 
             This action cannot be undone. Consider exporting your data first.
           </p>
