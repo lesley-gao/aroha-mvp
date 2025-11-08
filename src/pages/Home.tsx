@@ -96,7 +96,7 @@ export function Home({ locale }: HomeProps) {
           </div>
           <Link to="/diary">
             <Button
-              className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
+              className="w-full gap-2"
               size="lg"
             >
               {t.startWriting}
@@ -124,7 +124,7 @@ export function Home({ locale }: HomeProps) {
           </div>
           <Link to="/history">
             <Button
-              className="w-full gap-2 bg-teal-600 hover:bg-teal-700"
+              className="w-full gap-2"
               size="lg"
             >
               {t.viewProgress}
