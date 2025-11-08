@@ -8,20 +8,20 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ConsentModal } from "@/pages/Consent";
-import { PrivacyPage } from "@/pages/Privacy";
-import { Home } from "@/pages/Home";
-import { PHQ9 } from "@/pages/PHQ9";
-import { History } from "@/pages/History";
-import { Settings } from "@/pages/Settings";
-import { Auth } from "@/pages/Auth";
-import Diary from "@/pages/Diary";
-import { DiaryView } from "@/pages/DiaryView";
-import { type Locale } from "@/i18n/messages";
-import { getLanguage, getMergedRecords } from "@/utils/storage";
-import { generatePDF } from "@/utils/pdf";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { Button } from "./components/ui/button";
+import { ConsentModal } from "./pages/Consent";
+import { PrivacyPage } from "./pages/Privacy";
+import { Home } from "./pages/Home";
+import { PHQ9 } from "./pages/PHQ9";
+import { History } from "./pages/History";
+import { Settings } from "./pages/Settings";
+import { Auth } from "./pages/Auth";
+import Diary from "./pages/Diary";
+import { DiaryView } from "./pages/DiaryView";
+import { type Locale } from "./i18n/messages";
+import { getLanguage, getMergedRecords } from "./utils/storage";
+import { generatePDF } from "./utils/pdf";
+import { supabase, isSupabaseConfigured } from "./lib/supabase";
 import {
   ReaderIcon,
   ActivityLogIcon,

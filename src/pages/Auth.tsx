@@ -31,19 +31,18 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
   const [email, setEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const [emailConfirmationRequired, setEmailConfirmationRequired] = useState(false);
+  const [emailConfirmationRequired, setEmailConfirmationRequired] =
+    useState(false);
   const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Card className="grid grid-cols-1 md:grid-cols-2 min-h-screen overflow-hidden rounded-none border-0 shadow-none md:divide-x md:divide-gray-200">
       {/* Left: Logo + Form (aligned similar to reference) */}
-      <div className="py-8 px-6 md:py-16 md:px-16 flex flex-col min-h-screen md:min-h-0">
+      <div className="py-6 px-6 md:py-16 md:px-16 flex flex-col min-h-screen md:min-h-0">
         {/* Logo */}
-        <div className="mb-12">
-          <div className="h-8 w-20 rounded bg-gray-900/90 text-white flex items-center justify-center font-semibold">
-            Logo
-          </div>
+        <div className="mb-24">
+          <img src="/logo.png" alt="Aroha Logo" className="h-8 w-auto" />
         </div>
 
         <div className="flex-1">
@@ -86,7 +85,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
               </Button>
             </div>
 
-             {active === "login" ? (
+            {active === "login" ? (
               <form
                 className="space-y-5"
                 noValidate
@@ -94,7 +93,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                   e.preventDefault();
                   setLoginError("");
                   setIsLoading(true);
-                  
+
                   // Validate inputs
                   if (!email || !loginPassword) {
                     setLoginError("Please enter both email and password");
@@ -104,26 +103,39 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
 
                   // Check if Supabase is configured
                   if (!isSupabaseConfigured() || !supabase) {
-                    setLoginError("Authentication service not configured. Please contact support.");
+                    setLoginError(
+                      "Authentication service not configured. Please contact support."
+                    );
                     setIsLoading(false);
                     return;
                   }
 
                   try {
                     // Sign in with Supabase Auth
-                    const { data, error } = await supabase.auth.signInWithPassword({
-                      email: email,
-                      password: loginPassword,
-                    });
+                    const { data, error } =
+                      await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: loginPassword,
+                      });
 
                     if (error) {
-                      console.error('Login error:', error);
-                      if (error.message.includes('Invalid login credentials')) {
+                      console.error("Login error:", error);
+                      if (error.message.includes("Invalid login credentials")) {
                         setLoginError("Invalid email or password");
-                      } else if (error.message.includes('Email not confirmed')) {
-                        setLoginError("Please verify your email before logging in. Check your inbox for the confirmation email.");
-                      } else if (error.message.includes('Email link is invalid or has expired')) {
-                        setLoginError("Email verification link expired. Please sign up again.");
+                      } else if (
+                        error.message.includes("Email not confirmed")
+                      ) {
+                        setLoginError(
+                          "Please verify your email before logging in. Check your inbox for the confirmation email."
+                        );
+                      } else if (
+                        error.message.includes(
+                          "Email link is invalid or has expired"
+                        )
+                      ) {
+                        setLoginError(
+                          "Email verification link expired. Please sign up again."
+                        );
                       } else {
                         setLoginError(`Login failed: ${error.message}`);
                       }
@@ -133,45 +145,48 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
 
                     if (data.user) {
                       // Successful login
-                      console.log('Login successful:', data.user.email);
+                      console.log("Login successful:", data.user.email);
                       onAuthenticated?.();
                     } else {
                       setLoginError("Login failed. No user data returned.");
                       setIsLoading(false);
                     }
                   } catch (err) {
-                    console.error('Unexpected login error:', err);
+                    console.error("Unexpected login error:", err);
                     setLoginError("Login failed. Please try again.");
                   } finally {
                     setIsLoading(false);
                   }
                 }}
               >
-                 {signupSuccess && (
-                   <Alert variant="success">
-                     <CheckCircle2 className="h-5 w-5 mt-0.5" aria-hidden />
-                     <div>
-                       <AlertTitle>Success! Your account has been created</AlertTitle>
-                       <AlertDescription>
-                         {emailConfirmationRequired 
-                           ? "Please verify your email by clicking the link sent to your inbox before logging in."
-                           : "You can now log in using your email and password."}
-                       </AlertDescription>
-                     </div>
-                   </Alert>
-                 )}
-                 {loginError && (
-                   <Alert variant="destructive">
-                     <AlertCircle className="h-5 w-5 mt-0.5" aria-hidden />
-                     <div>
-                       <AlertTitle>Login Failed</AlertTitle>
-                       <AlertDescription>
-                         {loginError}
-                       </AlertDescription>
-                     </div>
-                   </Alert>
-                 )}
-                <div >
+                {signupSuccess && (
+                  <Alert variant="success">
+                    <CheckCircle2 className="h-5 w-5 mt-0.5" aria-hidden />
+                    <div>
+                      <AlertTitle>
+                        Success! Your account has been created
+                      </AlertTitle>
+                      <AlertDescription>
+                        {emailConfirmationRequired
+                          ? "Please verify your email by clicking the link sent to your inbox before logging in."
+                          : "You can now log in using your email and password."}
+                      </AlertDescription>
+                    </div>
+                  </Alert>
+                )}
+                {loginError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-5 w-5 mt-0.5" aria-hidden />
+                    <div>
+                      <AlertTitle>Login Failed</AlertTitle>
+                      <AlertDescription>{loginError}</AlertDescription>
+                    </div>
+                  </Alert>
+                )}
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">
+                  Welcome back
+                </h1>
+                <div>
                   <Label htmlFor="login-email" className="mb-2 block">
                     Email
                   </Label>
@@ -208,33 +223,39 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                       }
                     >
                       <span className="material-symbols-outlined" aria-hidden>
-                        {showPassword ?  "visibility":"visibility_off"}
+                        {showPassword ? "visibility" : "visibility_off"}
                       </span>
                     </button>
                   </div>
                 </div>
-                <Button type="submit" className="w-full h-11 rounded-md" disabled={isLoading}>
-                  {isLoading ? 'Logging in...' : 'Log in'}
+                <Button
+                  type="submit"
+                  className="w-full h-11 rounded-md"
+                  disabled={isLoading || !email || !loginPassword}
+                >
+                  {isLoading ? "Logging in..." : "Log in"}
                 </Button>
               </form>
             ) : (
-               <form
+              <form
                 className="space-y-5"
                 noValidate
                 onSubmit={async (e) => {
                   e.preventDefault();
                   if (!passwordsMatch) return;
-                  
+
                   setIsLoading(true);
                   setLoginError("");
 
                   // Check if Supabase is configured
                   if (!isSupabaseConfigured() || !supabase) {
-                    alert("Authentication service not configured. Please contact support.");
+                    alert(
+                      "Authentication service not configured. Please contact support."
+                    );
                     setIsLoading(false);
                     return;
                   }
-                  
+
                   try {
                     // Sign up with Supabase Auth
                     const { data, error } = await supabase.auth.signUp({
@@ -242,15 +263,17 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                       password: password,
                       options: {
                         emailRedirectTo: window.location.origin,
-                      }
+                      },
                     });
 
-                    console.log('Signup response:', { data, error });
+                    console.log("Signup response:", { data, error });
 
                     if (error) {
-                      console.error('Signup error:', error);
-                      if (error.message.includes('already registered')) {
-                        alert("An account with this email already exists. Please login instead.");
+                      console.error("Signup error:", error);
+                      if (error.message.includes("already registered")) {
+                        alert(
+                          "An account with this email already exists. Please login instead."
+                        );
                         setActive("login");
                         setEmail(signupEmail);
                       } else {
@@ -261,21 +284,30 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                     }
 
                     if (data.user) {
-                      console.log('User created:', data.user);
-                      
+                      console.log("User created:", data.user);
+
                       // Check if email confirmation is required
-                      if (data.user.identities && data.user.identities.length === 0) {
+                      if (
+                        data.user.identities &&
+                        data.user.identities.length === 0
+                      ) {
                         // User already exists
-                        alert("An account with this email already exists. Please login instead.");
+                        alert(
+                          "An account with this email already exists. Please login instead."
+                        );
                         setActive("login");
                         setEmail(signupEmail);
                       } else {
                         // Check if user needs to confirm email
-                        const needsEmailConfirmation = data.user.confirmed_at === null;
-                        
-                        console.log('Email confirmation required:', needsEmailConfirmation);
-                        console.log('confirmed_at:', data.user.confirmed_at);
-                        
+                        const needsEmailConfirmation =
+                          data.user.confirmed_at === null;
+
+                        console.log(
+                          "Email confirmation required:",
+                          needsEmailConfirmation
+                        );
+                        console.log("confirmed_at:", data.user.confirmed_at);
+
                         // Set state and switch to login tab
                         setEmailConfirmationRequired(needsEmailConfirmation);
                         setSignupSuccess(true);
@@ -284,7 +316,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                       }
                     }
                   } catch (err) {
-                    console.error('Unexpected signup error:', err);
+                    console.error("Unexpected signup error:", err);
                     alert("Signup failed. Please try again.");
                   } finally {
                     setIsLoading(false);
@@ -295,25 +327,25 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                   Welcome to Aroha
                 </h1>
 
-                 <div>
-                   <Label htmlFor="signup-email" className="mb-2 block">
-                     Email
-                   </Label>
-                   <Input
-                     id="signup-email"
-                     name="email"
-                     type="email"
-                     autoComplete="email"
-                     required
-                     value={signupEmail}
-                     onChange={(e) => setSignupEmail(e.target.value)}
-                     placeholder="jane@example.com"
-                     aria-describedby="signup-email-desc"
-                   />
-                   <p id="signup-email-desc" className="sr-only">
-                     Enter your email address
-                   </p>
-                 </div>
+                <div>
+                  <Label htmlFor="signup-email" className="mb-2 block">
+                    Email
+                  </Label>
+                  <Input
+                    id="signup-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                    placeholder="jane@example.com"
+                    aria-describedby="signup-email-desc"
+                  />
+                  <p id="signup-email-desc" className="sr-only">
+                    Enter your email address
+                  </p>
+                </div>
                 <div>
                   <Label htmlFor="password" className="mb-2 block">
                     Password
@@ -367,7 +399,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                         showConfirm ? "Hide password" : "Show password"
                       }
                     >
-                     <span className="material-symbols-outlined" aria-hidden>
+                      <span className="material-symbols-outlined" aria-hidden>
                         {showConfirm ? "visibility" : "visibility_off"}
                       </span>
                     </button>
@@ -394,15 +426,21 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
                     {passwordsMatch ? "Looks good!" : "Passwords must match"}
                   </span>
                 </div>
-                 <Button
+                <Button
                   type="submit"
                   className="w-full h-11 rounded-md"
-                   disabled={!passwordsMatch || signupEmail.trim().length === 0 || isLoading}
-                   aria-disabled={
-                     !passwordsMatch || signupEmail.trim().length === 0 || isLoading
-                   }
+                  disabled={
+                    !passwordsMatch ||
+                    signupEmail.trim().length === 0 ||
+                    isLoading
+                  }
+                  aria-disabled={
+                    !passwordsMatch ||
+                    signupEmail.trim().length === 0 ||
+                    isLoading
+                  }
                 >
-                  {isLoading ? 'Creating account...' : 'Continue'}
+                  {isLoading ? "Creating account..." : "Continue"}
                 </Button>
               </form>
             )}
@@ -413,10 +451,15 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
       {/* Right: Illustration image */}
       <div className="hidden md:block bg-[#efece7] relative">
         <img
-          src="/cover2.png"
+          src="/theme.png"
           alt="Welcome illustration"
           className="absolute inset-0 w-full h-full object-cover"
         />
+        <div className="absolute inset-0   pt-12 ">
+          <h2 className="text-xl uppercase lg:text-6xl md:text-4xl text-[#009490] px-8 text-outline leading-tight ">
+            You are not alone
+          </h2>
+        </div>
       </div>
     </Card>
   );
