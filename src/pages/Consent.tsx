@@ -54,8 +54,10 @@ export function ConsentModal({ locale, onConsent }: ConsentModalProps) {
             <div className="bg-[#D1F08B] border-l-4 border-[#009490] p-4 my-4">
               <h4 className="font-semibold mb-2">What you should know:</h4>
               <ul className="space-y-2 list-disc list-inside">
-                <li>Your data never leaves this device automatically</li>
-                <li>No account or login required</li>
+                <li>Account and login required to use this app</li>
+                <li>Your data is stored securely in our database</li>
+                <li>When cloud sync is enabled, data is synced across your devices</li>
+                <li>Microphone access is optional and only used for speech-to-text features</li>
                 <li>You control all exports and sharing</li>
                 <li>Delete your data anytime from Privacy settings</li>
               </ul>

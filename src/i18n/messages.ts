@@ -117,7 +117,7 @@ const messages: Record<Locale, Messages> = {
     escalationText: 'Your score indicates you may be experiencing significant distress. We strongly encourage you to reach out for support. If you\'re in immediate danger, please call 111.',
     
     consentTitle: 'Privacy & Consent',
-    consentText: 'Your responses are stored only on this device. No data is sent to external servers without your explicit consent. You can export your data as a PDF or JSON file to share with a healthcare provider. You can delete all your data at any time from the Privacy settings.',
+    consentText: 'This app requires an account and login to use. Your data is stored securely in our database and synced across your devices when cloud sync is enabled. This app includes optional speech-to-text features that require microphone access - you can use the app fully without enabling these features. You can export your data as a PDF or JSON file to share with a healthcare provider. You can delete all your data at any time from the Privacy settings.',
     consentButton: 'I understand and consent',
     
     privacyDeleteButton: 'Delete All My Data',
@@ -189,7 +189,7 @@ const messages: Record<Locale, Messages> = {
     escalationText: 'Ko tō tohu e tohu ana kei te pā mai pea te mamae nui. E tino akiaki ana mātou kia toro atu koe ki te tautoko. Mēnā kei te mōrearea tūturu koe, waea ināianei ki te 111.',
     
     consentTitle: 'Tūmataiti me te Whakaae',
-    consentText: 'Ko ō whakautu ka tiakina ki runga i tēnei pūrere anake. Kāore he raraunga ka tukuna ki ngā tūmau o waho kore tō whakaae tūturu. Ka taea e koe te kaweake i ō raraunga hei PDF, JSON rānei hei toha ki tētahi kaiwhakarato hauora. Ka taea e koe te muku i ō raraunga katoa i ngā wā katoa mai i ngā tautuhinga Tūmataiti.',
+    consentText: 'E hiahia ana tēnei taupānga ki tētahi pūkete me te takiuru hei whakamahi. Ka tiakina ō raraunga i te pūrere raraunga haumaru, ka tukutahi hoki ki ō pūrere katoa inā whakahohea te tukutahi kapua. Kei roto i tēnei taupānga ētahi āhuatanga kōrero-ki-te-tuhi whiriwhiri e hiahia ana ki te uru mikiona - ka taea e koe te whakamahi i te taupānga katoa me te kore e whakahohe i ēnei āhuatanga. Ka taea e koe te kaweake i ō raraunga hei PDF, JSON rānei hei toha ki tētahi kaiwhakarato hauora. Ka taea e koe te muku i ō raraunga katoa i ngā wā katoa mai i ngā tautuhinga Tūmataiti.',
     consentButton: 'Kua mārama ahau, ka whakaae',
     
     privacyDeleteButton: 'Mukua Aku Raraunga Katoa',
