@@ -10,9 +10,13 @@ env.allowLocalModels = false;
 env.allowRemoteModels = true;
 env.backends.onnx.wasm.numThreads = 1;
 
+// Types for Transformers.js pipeline models
+type TranscriberModel = (audio: Float32Array) => Promise<{ text: string }>;
+type SummarizerModel = (text: string, options?: { max_length?: number; min_length?: number; do_sample?: boolean }) => Promise<Array<{ summary_text: string }>>;
+
 // Singleton instances for performance
-let transcriber: any = null;
-let summarizer: any = null;
+let transcriber: TranscriberModel | null = null;
+let summarizer: SummarizerModel | null = null;
 
 /**
  * Initialize the speech-to-text model (Whisper)
@@ -27,15 +31,15 @@ async function getTranscriber() {
         'Xenova/whisper-tiny.en',
         { 
           quantized: true,
-          progress_callback: (progress: any) => {
+          progress_callback: (progress: { status: string; file?: string; loaded?: number; total?: number }) => {
             if (progress.status === 'downloading') {
-              console.log(`📥 Downloading: ${progress.file} - ${Math.round((progress.loaded / progress.total) * 100)}%`);
+              console.log(`📥 Downloading: ${progress.file} - ${Math.round((progress.loaded ?? 0) / (progress.total ?? 1) * 100)}%`);
             } else if (progress.status === 'done') {
               console.log(`✅ Downloaded: ${progress.file}`);
             }
           }
         }
-      );
+      ) as TranscriberModel;
       console.log('✅ Whisper model loaded successfully');
     } catch (error) {
       console.error('❌ Failed to load Whisper model:', error);
@@ -58,13 +62,13 @@ async function getSummarizer() {
         'Xenova/distilbart-cnn-6-6',
         {
           quantized: true,
-          progress_callback: (progress: any) => {
+          progress_callback: (progress: { status: string; file?: string; loaded?: number; total?: number }) => {
             if (progress.status === 'downloading') {
-              console.log(`📥 Downloading: ${progress.file} - ${Math.round((progress.loaded / progress.total) * 100)}%`);
+              console.log(`📥 Downloading: ${progress.file} - ${Math.round((progress.loaded ?? 0) / (progress.total ?? 1) * 100)}%`);
             }
           }
         }
-      );
+      ) as SummarizerModel;
       console.log('✅ Summarization model loaded successfully');
     } catch (error) {
       console.error('❌ Failed to load summarization model:', error);

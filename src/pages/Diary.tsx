@@ -13,7 +13,7 @@ import {
   TimelineTitle, 
   TimelineDescription 
 } from '@/components/ui/timeline';
-import { Save, Calendar, X, ArrowDown } from 'lucide-react';
+import { Save, Calendar, X, ArrowUp } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { BrowserSpeechToText } from '@/components/speech/BrowserSpeechToText';
 import type { Locale } from '@/i18n/messages';
@@ -59,7 +59,7 @@ export default function Diary({ locale }: DiaryProps) {
       characters: 'characters',
       aiSummary: 'AI Summary',
       clearSummary: 'Clear',
-      insertSummary: 'Insert',
+      insertSummary: 'Add to Entry',
       showAllDiaries: 'Show All Diaries'
     },
     mi: {
@@ -77,7 +77,7 @@ export default function Diary({ locale }: DiaryProps) {
       characters: 'reta',
       aiSummary: 'Whakarāpopoto AI',
       clearSummary: 'Whakakore',
-      insertSummary: 'Whakauru',
+      insertSummary: 'Tāpiri ki te Tuhinga',
       showAllDiaries: 'Whakaatu Ngā Pukapuka Katoa'
     }
   };
@@ -288,19 +288,21 @@ export default function Diary({ locale }: DiaryProps) {
               <div className="mb-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base font-medium text-indigo-900">✨ {t.aiSummary}</span>
-                  <div className="ml-auto flex gap-2">
-                    <button
+                  <div className="ml-auto flex items-center gap-2">
+                    <Button
                       onClick={handleInsertSummary}
-                      className="text-xs text-indigo-500 hover:text-indigo-800 flex items-center gap-1"
+                      size="sm"
+                      className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium"
                     >
-                      <ArrowDown className="w-3 h-3" />
+                      <ArrowUp className="w-4 h-4" />
                       {t.insertSummary}
-                    </button>
+                    </Button>
                     <button
                       onClick={() => setAiSummary('')}
-                      className="text-xs text-indigo-500 hover:text-indigo-800"
+                      className="p-1.5 text-indigo-500 hover:text-indigo-800 hover:bg-indigo-100 rounded-full transition-colors"
+                      aria-label={t.clearSummary}
                     >
-                      {t.clearSummary}
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

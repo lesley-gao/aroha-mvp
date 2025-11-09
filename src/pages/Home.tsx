@@ -7,7 +7,9 @@ import {
   ActivityLogIcon,
   RocketIcon,
   LightningBoltIcon,
+  LockClosedIcon,
 } from "@radix-ui/react-icons";
+import { Wand2, Send } from "lucide-react";
 import type { Locale } from "@/i18n/messages";
 
 interface HomeProps {
@@ -18,194 +20,195 @@ export function Home({ locale }: HomeProps) {
   const t = getTranslations(locale);
 
   return (
-    <div className="container mx-auto px-4 pt-12 max-w-6xl">
-      {/* Hero Section with Background Image */}
-      <div className="text-center mb-16 relative">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-          {t.heroTitle}
-        </h1>
-        <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-          {t.heroSubtitle}
-        </p>
-        <Link to="/phq9">
-          <Button
-            size="lg"
-            className="text-lg px-8 py-6 gap-2 shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <RocketIcon className="h-5 w-5" />
-            {t.getStarted}
-          </Button>
-        </Link>
-      </div>
+    <>
+      <div className="container mx-auto px-4 pt-12 max-w-6xl">
+        {/* Hero Section with Image and Text */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center lg:mb-30 mb-20">
+          {/* Hero Image - Left */}
+          <div className="order-2 md:order-1">
+            <img 
+              src="/hero-image.png" 
+              alt="Mental wellness illustration" 
+              className="w-full h-auto rounded-3xl"
+            />
+          </div>
 
-      {/* Hero Image - Mental Wellness */}
-      <div className="mb-20 rounded-3xl overflow-hidden shadow-2xl">
-        <div className="relative h-64 md:h-80 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center">
-          <div className="text-center p-8">
-            <div className="text-6xl md:text-8xl mb-4">🌿</div>
-            <p className="text-xl md:text-2xl font-semibold text-gray-700">
-              {t.heroImageText}
+          {/* Hero Text and CTA - Right */}
+          <div className="order-1 md:order-2 flex flex-col justify-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+              {t.heroTitle}
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
+              {t.heroSubtitle}
             </p>
+            <Link to="/phq9">
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6 gap-2 shadow-lg hover:shadow-xl transition-shadow w-full md:w-auto"
+              >
+                <RocketIcon className="h-5 w-5" />
+                {t.getStarted}
+              </Button>
+            </Link>
           </div>
         </div>
-      </div>
 
-      {/* Features Grid - Equal Weight */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-20">
-        {/* PHQ-9 Assessment */}
-        <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-blue-50 to-indigo-50">
-          <div className="relative mb-6">
-            <div className="absolute inset-0 bg-indigo-600 rounded-2xl blur-xl opacity-20"></div>
-            <div className="relative bg-indigo-600 w-14 h-14 rounded-2xl flex items-center justify-center">
-              <ReaderIcon className="h-7 w-7 text-white" />
-            </div>
-          </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-            {t.phq9Title}
-          </h3>
-          <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
-            {t.phq9Description}
-          </p>
-          <div className="mb-4 h-32 md:h-40 bg-white rounded-xl flex items-center justify-center text-5xl md:text-6xl">
-            📋
-          </div>
-          <Link to="/phq9">
-            <Button className="w-full gap-2" size="lg">
-              {t.takeAssessment}
-              <LightningBoltIcon className="h-4 w-4" />
-            </Button>
-          </Link>
-        </Card>
-
-        {/* Diary Feature */}
-        <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-purple-50 to-pink-50">
-          <div className="relative mb-6">
-            <div className="absolute inset-0 bg-purple-600 rounded-2xl blur-xl opacity-20"></div>
-            <div className="relative bg-purple-600 w-14 h-14 rounded-2xl flex items-center justify-center">
-              <Pencil2Icon className="h-7 w-7 text-white" />
-            </div>
-          </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-            {t.diaryTitle}
-          </h3>
-          <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
-            {t.diaryDescription}
-          </p>
-          <div className="mb-4 h-32 md:h-40 bg-white rounded-xl flex items-center justify-center text-5xl md:text-6xl">
-            ✍️
-          </div>
-          <Link to="/diary">
-            <Button
-              className="w-full gap-2"
-              size="lg"
-            >
-              {t.startWriting}
-              <Pencil2Icon className="h-4 w-4" />
-            </Button>
-          </Link>
-        </Card>
-
-        {/* History & Insights */}
-        <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-teal-50 to-cyan-50">
-          <div className="relative mb-6">
-            <div className="absolute inset-0 bg-teal-600 rounded-2xl blur-xl opacity-20"></div>
-            <div className="relative bg-teal-600 w-14 h-14 rounded-2xl flex items-center justify-center">
-              <ActivityLogIcon className="h-7 w-7 text-white" />
-            </div>
-          </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-            {t.historyTitle}
-          </h3>
-          <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
-            {t.historyDescription}
-          </p>
-          <div className="mb-4 h-32 md:h-40 bg-white rounded-xl flex items-center justify-center text-5xl md:text-6xl">
-            📊
-          </div>
-          <Link to="/history">
-            <Button
-              className="w-full gap-2"
-              size="lg"
-            >
-              {t.viewProgress}
-              <ActivityLogIcon className="h-4 w-4" />
-            </Button>
-          </Link>
-        </Card>
-      </div>
-
-      {/* Why Aroha Section - Cultural Elements */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white mb-20 shadow-2xl">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
-          {t.whyArohaTitle}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <div className="flex gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-colors">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                🔒
+        {/* Features Grid - Equal Weight */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:mb-30 mb-10">
+          {/* PHQ-9 Assessment */}
+          <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-indigo-600 rounded-2xl blur-xl opacity-20"></div>
+              <div className="relative bg-indigo-600 w-14 h-14 rounded-2xl flex items-center justify-center">
+                <ReaderIcon className="h-7 w-7 text-white" />
               </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">
-                {t.privateSecureTitle}
-              </h4>
-              <p className="text-white/90 text-sm leading-relaxed">
-                {t.privateSecureDesc}
-              </p>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+              {t.phq9Title}
+            </h3>
+            <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
+              {t.phq9Description}
+            </p>
+            <div className="mb-4 h-32 md:h-40 rounded-xl flex items-center justify-center text-5xl md:text-6xl">
+              📋
             </div>
-          </div>
-          <div className="flex gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-colors">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                🤖
+            <Link to="/phq9">
+              <Button className="w-full gap-2" size="lg">
+                {t.takeAssessment}
+                <LightningBoltIcon className="h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Diary Feature */}
+          <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-purple-600 rounded-2xl blur-xl opacity-20"></div>
+              <div className="relative bg-purple-600 w-14 h-14 rounded-2xl flex items-center justify-center">
+                <Pencil2Icon className="h-7 w-7 text-white" />
               </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">{t.aiPoweredTitle}</h4>
-              <p className="text-white/90 text-sm leading-relaxed">
-                {t.aiPoweredDesc}
-              </p>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+              {t.diaryTitle}
+            </h3>
+            <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
+              {t.diaryDescription}
+            </p>
+            <div className="mb-4 h-32 md:h-40 rounded-xl flex items-center justify-center text-5xl md:text-6xl">
+              ✍️
             </div>
-          </div>
-          <div className="flex gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-colors">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                📊
+            <Link to="/diary">
+              <Button className="w-full gap-2" size="lg">
+                {t.startWriting}
+                <Pencil2Icon className="h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+
+          {/* History & Insights */}
+          <Card className="p-6 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-teal-600 rounded-2xl blur-xl opacity-20"></div>
+              <div className="relative bg-teal-600 w-14 h-14 rounded-2xl flex items-center justify-center">
+                <ActivityLogIcon className="h-7 w-7 text-white" />
               </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">{t.insightsTitle}</h4>
-              <p className="text-white/90 text-sm leading-relaxed">
-                {t.insightsDesc}
-              </p>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+              {t.historyTitle}
+            </h3>
+            <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base min-h-[80px]">
+              {t.historyDescription}
+            </p>
+            <div className="mb-4 h-32 md:h-40 rounded-xl flex items-center justify-center text-5xl md:text-6xl">
+              📊
             </div>
-          </div>
-          <div className="flex gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-colors">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                🌏
+            <Link to="/history">
+              <Button className="w-full gap-2" size="lg">
+                {t.viewProgress}
+                <ActivityLogIcon className="h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+        </div>
+
+        {/* Why Aroha Section - Cultural Elements */}
+        <div className=" rounded-3xl p-8 md:p-12 text-gray-900 lg:mb-30 mb-20 ">
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+            {t.whyArohaTitle}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="flex gap-4 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30  backdrop-blur-sm rounded-xl  p-6 hover:bg-white/40 transition-colors shadow-md">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-white/60 rounded-full flex items-center justify-center">
+                  <LockClosedIcon className="w-6 h-6 text-[#009490]" />
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-2 text-gray-900">
+                  {t.privateSecureTitle}
+                </h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {t.privateSecureDesc}
+                </p>
               </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">{t.nzFocusedTitle}</h4>
-              <p className="text-white/90 text-sm leading-relaxed">
-                {t.nzFocusedDesc}
-              </p>
+
+            <div className="flex gap-4 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30  backdrop-blur-sm rounded-xl p-6 hover:bg-white/90 transition-colors shadow-md">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-white/60 rounded-full flex items-center justify-center">
+                  <ActivityLogIcon className="w-6 h-6 text-[#009490]" />
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-2 text-gray-900">
+                  {t.insightsTitle}
+                </h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {t.insightsDesc}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30  backdrop-blur-sm rounded-xl p-6 hover:bg-white/90 transition-colors shadow-md">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center">
+                  <Wand2 className="w-6 h-6 text-[#009490]" />
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-2 text-gray-900">
+                  {t.aiPoweredTitle}
+                </h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {t.aiPoweredDesc}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4 bg-gradient-to-r from-indigo-100/30 via-purple-100/30 to-pink-100/30  backdrop-blur-sm rounded-xl p-6 hover:bg-white/90 transition-colors shadow-md">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-pink-600 bg-white/60 rounded-full flex items-center justify-center">
+                  <ReaderIcon className="w-6 h-6 text-[#009490]" />
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-2 text-gray-900">
+                  {t.nzFocusedTitle}
+                </h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {t.nzFocusedDesc}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Quick Start Guide - Journey Visualization */}
-      <div className="text-center mb-20">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {t.quickStartTitle}
-        </h2>
-        <p className="text-gray-600 mb-12 text-lg">{t.quickStartSubtitle}</p>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-12 max-w-4xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 bg-indigo-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-auto">
+        {/* Quick Start Guide - Journey Visualization */}
+        <div className="text-center lg:mb-30 mb-20">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            {t.quickStartTitle}
+          </h2>
+          <p className="text-gray-600 mb-12 text-lg">{t.quickStartSubtitle}</p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-20 max-w-4xl mx-auto">
+            <div className="flex items-center gap-4 bg-indigo-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-64 h-24">
               <div className="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
                 1
               </div>
@@ -213,10 +216,8 @@ export function Home({ locale }: HomeProps) {
                 {t.step1}
               </span>
             </div>
-          </div>
-          <div className="hidden md:block text-gray-400 text-2xl">→</div>
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 bg-purple-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-auto">
+            <div className="hidden md:block text-gray-400 text-2xl">→</div>
+            <div className="flex items-center gap-4 bg-purple-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-64 h-24">
               <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
                 2
               </div>
@@ -224,10 +225,8 @@ export function Home({ locale }: HomeProps) {
                 {t.step2}
               </span>
             </div>
-          </div>
-          <div className="hidden md:block text-gray-400 text-2xl">→</div>
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 bg-teal-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-auto">
+            <div className="hidden md:block text-gray-400 text-2xl">→</div>
+            <div className="flex items-center gap-4 bg-teal-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow w-full md:w-64 h-24">
               <div className="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
                 3
               </div>
@@ -236,36 +235,18 @@ export function Home({ locale }: HomeProps) {
               </span>
             </div>
           </div>
+          <Link to="/phq9">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 gap-2 shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <Send className="h-5 w-5" />
+              {t.beginJourney}
+            </Button>
+          </Link>
         </div>
-        <Link to="/phq9">
-          <Button
-            size="lg"
-            variant="outline"
-            className="text-lg px-8 py-6 border-2 hover:bg-indigo-50"
-          >
-            {t.beginJourney}
-          </Button>
-        </Link>
       </div>
-
-      {/* Footer Section - Simple & Warm */}
-      <footer className="mt-20 pt-8 pb-4 border-t border-gray-200">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="text-3xl">💚</span>
-            <p className="text-gray-600 text-lg">{t.footerMessage}</p>
-          </div>
-
-          <p className=" text-gray-400 mb-3 max-w-xl mx-auto">
-            {t.footerDisclaimer}
-          </p>
-
-          <p className=" text-gray-500">
-            © 2025 Aroha • Made with love in Aotearoa 🇳🇿
-          </p>
-        </div>
-      </footer>
-    </div>
+    </>
   );
 }
 
@@ -301,12 +282,13 @@ function getTranslations(locale: Locale) {
         privateSecureTitle: "Private & Secure",
         privateSecureDesc:
           "Your data stays with you. Export or delete anytime. Optional cloud sync with encryption.",
+
+        insightsTitle: "Track & Export",
+        insightsDesc:
+          "Track your mood daily and export your data as PDF or JSON for future clinical records and healthcare provider visits.",
         aiPoweredTitle: "AI-Powered Insights",
         aiPoweredDesc:
           "Voice-to-text diary entries with emotional keyword detection and smart summaries.",
-        insightsTitle: "Visual Insights",
-        insightsDesc:
-          "Beautiful charts and trend analysis help you understand your mental health patterns.",
         nzFocusedTitle: "NZ-Focused Resources",
         nzFocusedDesc:
           "Curated mental health resources and crisis support specific to Aotearoa New Zealand.",
@@ -357,9 +339,9 @@ function getTranslations(locale: Locale) {
         aiPoweredTitle: "Whāinga e Whakamanaia e AI",
         aiPoweredDesc:
           "Ngā pūkete pukapuka mā te reo-ki-kupu me te kitenga kupu kare-ā-roto me ngā whakarāpopototanga mōhio.",
-        insightsTitle: "Whāinga Ataata",
+        insightsTitle: "Aroturuki & Kaweake",
         insightsDesc:
-          "Ngā kauwhata ātaahua me te tātaritanga ia āhua ka āwhina i a koe ki te mārama i ō ia āhua hauora hinengaro.",
+          "Aroturuki ia rā i tō kare-ā-roto me te kaweake i ō raraunga hei PDF, JSON rānei mō ngā pūkete haumanu o te wā kei te heke mai me ngā toronga ki ngā kaiwhakarato hauora.",
         nzFocusedTitle: "Rauemi Arotahi-NZ",
         nzFocusedDesc:
           "Ngā rauemi hauora hinengaro kua whakatauhia me te tautoko ohotata motuhake ki Aotearoa.",

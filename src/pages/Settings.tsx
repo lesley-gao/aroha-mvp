@@ -57,7 +57,7 @@ export function Settings({ locale, onLocaleChange }: SettingsProps) {
 
   return (
     <div className="container mx-auto max-w-3xl py-8 px-4">
-      <Card>
+      <Card className="bg-white/30">
         <CardHeader>
           <CardTitle className="text-2xl">{messages.settingsTitle}</CardTitle>
           <CardDescription>

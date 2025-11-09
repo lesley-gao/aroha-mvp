@@ -19,13 +19,55 @@ export function isSpeechRecognitionSupported(): boolean {
 
 /**
  * Transcribe audio using browser's built-in speech recognition
- * @param audioBlob - Audio blob from recording
+ * @param _audioBlob - Audio blob from recording (unused - Web Speech API doesn't support blob processing)
  * @returns Transcribed text
  */
-export async function transcribeWithBrowserAPI(audioBlob: Blob): Promise<string> {
+export async function transcribeWithBrowserAPI(_audioBlob: Blob): Promise<string> {
   // For now, we use live recognition during recording instead of blob processing
   // This is a limitation of Web Speech API
   throw new Error('Please use BrowserSpeechRecognition component for live transcription');
+}
+
+// Types for Web Speech API
+interface SpeechRecognitionWindow extends Window {
+  webkitSpeechRecognition?: new () => SpeechRecognition;
+  SpeechRecognition?: new () => SpeechRecognition;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  maxAlternatives: number;
+  start(): void;
+  stop(): void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+}
+
+interface SpeechRecognitionEvent {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
 }
 
 /**
@@ -38,7 +80,7 @@ export function createSpeechRecognition(options: {
   language?: string;
   continuous?: boolean;
 }): { start: () => void; stop: () => void } {
-  const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+  const SpeechRecognition = (window as SpeechRecognitionWindow).webkitSpeechRecognition || (window as SpeechRecognitionWindow).SpeechRecognition;
   
   if (!SpeechRecognition) {
     throw new Error('Speech recognition not supported in this browser');
@@ -53,7 +95,7 @@ export function createSpeechRecognition(options: {
   let finalTranscript = '';
   let interimTranscript = '';
 
-  recognition.onresult = (event: any) => {
+  recognition.onresult = (event: SpeechRecognitionEvent) => {
     interimTranscript = '';
     
     for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -69,7 +111,7 @@ export function createSpeechRecognition(options: {
     }
   };
 
-  recognition.onerror = (event: any) => {
+  recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
     console.error('Speech recognition error:', event.error);
     
     const errorMessages: Record<string, string> = {

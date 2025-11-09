@@ -136,7 +136,7 @@ export function History({ locale, onExportPDF }: HistoryProps) {
 
   return (
     <div className="container mx-auto max-w-4xl py-8 px-4">
-      <Card>
+      <Card className="bg-white/30">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -146,7 +146,7 @@ export function History({ locale, onExportPDF }: HistoryProps) {
               </CardDescription>
             </div>
             {onExportPDF && (
-              <Button onClick={onExportPDF} variant="outline">
+              <Button onClick={onExportPDF} variant="outline" className="bg-[#D1F08B] text-gray-900 shadow-sm hover:bg-[#b8d66a]">
                 <FileDown className="h-4 w-4 mr-2" />
                 {messages.historyExportPDF}
               </Button>

@@ -4,7 +4,7 @@
  * Works immediately, no downloads needed
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Wifi } from 'lucide-react';
 import { 
@@ -32,130 +32,55 @@ export function BrowserSpeechToText({
   const [error, setError] = useState<string | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [currentTranscript, setCurrentTranscript] = useState('');
+  const [wasRecordingStopped, setWasRecordingStopped] = useState(false);
   
   const recognitionRef = useRef<{ start: () => void; stop: () => void } | null>(null);
   const durationIntervalRef = useRef<number | null>(null);
+  const currentTranscriptRef = useRef('');
+  const isRecordingRef = useRef(false);
 
   const translations = {
     en: {
       startRecording: 'Start Recording',
       stopRecording: 'Stop Recording',
-      browserPowered: 'Browser Speech API',
+      browserPowered: 'Speech to text',
       error: 'Error',
       notSupported: 'Speech recognition not supported in this browser. Please use Chrome or Edge.',
       permissionDenied: 'Microphone permission denied',
       noSpeech: 'No speech detected',
       tryAgain: 'Try Again',
       recordingTime: 'Recording',
-      requiresInternet: 'Please make sure you are connected to the internet'
+      requiresInternet: 'Please make sure you are connected to the internet',
+      aiSummary: 'Here is what AI summarizes:'
     },
     mi: {
       startRecording: 'Tīmata Hopu',
       stopRecording: 'Kāti Hopu',
-      browserPowered: 'API Kōrero Pūtirotiro',
+      browserPowered: 'Kōrero ki te Tuhi',
       error: 'Hapa',
       notSupported: 'Kāore e tautokohia te whakamātautau kōrero i tēnei pūtirotiro. Whakamahia Chrome, Edge rānei.',
       permissionDenied: 'Kua whakakāhoretia te whakaae mikiona',
       noSpeech: 'Kāore he kōrero i kitea',
       tryAgain: 'Whakamātau Anō',
       recordingTime: 'E hopu ana',
-      requiresInternet: 'Me whai hononga ipurangi'
+      requiresInternet: 'Me whai hononga ipurangi',
+      aiSummary: 'Ko tēnei te whakarāpopototanga a te AI:'
     }
   };
 
   const t = translations[locale];
 
+  // Update refs when state changes
   useEffect(() => {
-    // Initialize speech recognition
-    if (!isSpeechRecognitionSupported()) {
-      setError(t.notSupported);
-      return;
-    }
+    currentTranscriptRef.current = currentTranscript;
+  }, [currentTranscript]);
 
-    try {
-      const recognition = createSpeechRecognition({
-        language: locale === 'mi' ? 'mi-NZ' : 'en-US',
-        continuous: true,
-        onResult: (transcript, isFinal) => {
-          setCurrentTranscript(transcript);
-          if (isFinal) {
-            console.log('✅ Final transcript:', transcript);
-          }
-        },
-        onError: (errorMsg) => {
-          console.error('❌ Speech error:', errorMsg);
-          setError(errorMsg);
-          setIsRecording(false);
-        },
-        onEnd: () => {
-          console.log('🎤 Speech recognition ended');
-          if (isRecording) {
-            // Only finalize if we have a transcript
-            if (currentTranscript.trim().length > 0) {
-              finalizeTranscript();
-            }
-          }
-          setIsRecording(false);
-        }
-      });
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+  }, [isRecording]);
 
-      recognitionRef.current = recognition;
-    } catch (err) {
-      console.error('Failed to initialize speech recognition:', err);
-      setError(t.notSupported);
-    }
-
-    return () => {
-      if (durationIntervalRef.current) {
-        clearInterval(durationIntervalRef.current);
-      }
-    };
-  }, [locale]);
-
-  const startRecording = () => {
-    if (!recognitionRef.current) {
-      setError(t.notSupported);
-      return;
-    }
-
-    try {
-      setError(null);
-      setCurrentTranscript('');
-      setRecordingDuration(0);
-
-      recognitionRef.current.start();
-      setIsRecording(true);
-
-      // Start duration timer
-      durationIntervalRef.current = setInterval(() => {
-        setRecordingDuration(prev => prev + 1);
-      }, 1000);
-
-    } catch (err) {
-      console.error('Recording error:', err);
-      setError(t.permissionDenied);
-    }
-  };
-
-  const stopRecording = () => {
-    if (recognitionRef.current && isRecording) {
-      recognitionRef.current.stop();
-      setIsRecording(false);
-      
-      if (durationIntervalRef.current) {
-        clearInterval(durationIntervalRef.current);
-      }
-
-      if (currentTranscript.trim().length > 0) {
-        finalizeTranscript();
-      } else {
-        setError(t.noSpeech);
-      }
-    }
-  };
-
-  const finalizeTranscript = () => {
-    const transcript = currentTranscript.trim();
+  const finalizeTranscript = useCallback(() => {
+    const transcript = currentTranscriptRef.current.trim();
     
     if (!transcript) {
       setError(t.noSpeech);
@@ -182,6 +107,97 @@ export function BrowserSpeechToText({
     
     // Clear error on success
     setError(null);
+  }, [onTranscript, onSummary, showSummary, t.noSpeech]);
+
+  useEffect(() => {
+    // Initialize speech recognition
+    if (!isSpeechRecognitionSupported()) {
+      setError(t.notSupported);
+      return;
+    }
+
+    try {
+      const recognition = createSpeechRecognition({
+        language: locale === 'mi' ? 'mi-NZ' : 'en-US',
+        continuous: true,
+        onResult: (transcript, isFinal) => {
+          setCurrentTranscript(transcript);
+          if (isFinal) {
+            console.log('✅ Final transcript:', transcript);
+          }
+        },
+        onError: (errorMsg) => {
+          console.error('❌ Speech error:', errorMsg);
+          setError(errorMsg);
+          setIsRecording(false);
+        },
+        onEnd: () => {
+          console.log('🎤 Speech recognition ended');
+          if (isRecordingRef.current) {
+            // Only finalize if we have a transcript
+            if (currentTranscriptRef.current.trim().length > 0) {
+              finalizeTranscript();
+            }
+          }
+          setIsRecording(false);
+        }
+      });
+
+      recognitionRef.current = recognition;
+    } catch (err) {
+      console.error('Failed to initialize speech recognition:', err);
+      setError(t.notSupported);
+    }
+
+    return () => {
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+    };
+  }, [locale, finalizeTranscript, t.notSupported]);
+
+  const startRecording = () => {
+    if (!recognitionRef.current) {
+      setError(t.notSupported);
+      return;
+    }
+
+    try {
+      setError(null);
+      setCurrentTranscript('');
+      setRecordingDuration(0);
+      setWasRecordingStopped(false);
+
+      recognitionRef.current.start();
+      setIsRecording(true);
+
+      // Start duration timer
+      durationIntervalRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+
+    } catch (err) {
+      console.error('Recording error:', err);
+      setError(t.permissionDenied);
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognitionRef.current && isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      setWasRecordingStopped(true);
+      
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+
+      if (currentTranscript.trim().length > 0) {
+        finalizeTranscript();
+      } else {
+        setError(t.noSpeech);
+      }
+    }
   };
 
   const formatDuration = (seconds: number): string => {
@@ -257,9 +273,11 @@ export function BrowserSpeechToText({
 
       {/* Help Text */}
       <div className=" text-gray-500">
-        {locale === 'en' 
-          ? 'Using browser speech recognition. Please make sure you are connected to the internet.'
-          : 'Mā te whakamātautau kōrero pūtirotiro. Me whai hononga ipurangi.'}
+        {wasRecordingStopped && currentTranscript.trim().length > 0
+          ? t.aiSummary
+          : locale === 'en' 
+            ? 'Using browser speech recognition. Please make sure you are connected to the internet.'
+            : 'Mā te whakamātautau kōrero pūtirotiro. Me whai hononga ipurangi.'}
       </div>
     </div>
   );

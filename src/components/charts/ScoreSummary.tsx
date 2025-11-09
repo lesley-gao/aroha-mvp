@@ -19,7 +19,7 @@ export function ScoreSummaryCard({ summary, currentSeverity, locale = 'en', tren
   const t = getTranslations(locale);
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6">
+    <div className="bg-white dark:bg-gray-800 p-6 border-2 border-indigo-100 rounded-lg">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
         {t.title}
       </h3>

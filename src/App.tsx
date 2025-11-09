@@ -19,6 +19,7 @@ import { Auth } from "./pages/Auth";
 import Diary from "./pages/Diary";
 import { DiaryView } from "./pages/DiaryView";
 import { AllDiaries } from "./pages/AllDiaries";
+import { Footer } from "./components/Footer";
 import { type Locale } from "./i18n/messages";
 import { getLanguage, getMergedRecords } from "./utils/storage";
 import { generatePDF } from "./utils/pdf";
@@ -27,7 +28,6 @@ import {
   ReaderIcon,
   ActivityLogIcon,
   GearIcon,
-  LockClosedIcon,
   Pencil2Icon,
   ExitIcon,
   HomeIcon,
@@ -252,23 +252,6 @@ function AppContent() {
                       <GearIcon className="mr-2 h-4 w-4" aria-hidden /> Settings
                     </Button>
                   </Link>
-                  <Link to="/privacy">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/privacy")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/privacy") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/privacy")}
-                    >
-                      <LockClosedIcon className="mr-2 h-4 w-4" aria-hidden />{" "}
-                      Privacy
-                    </Button>
-                  </Link>
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
@@ -315,6 +298,7 @@ function AppContent() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
+          <Footer locale={locale} />
         </div>
       </div>
     </>

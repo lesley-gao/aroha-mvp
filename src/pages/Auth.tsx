@@ -42,7 +42,7 @@ export function Auth({ defaultTab = "signup", onAuthenticated }: AuthProps) {
       <div className="py-6 px-6 md:py-16 md:px-16 flex flex-col min-h-screen md:min-h-0">
         {/* Logo */}
         <div className="mb-24">
-          <img src="/logo.png" alt="Aroha Logo" className="h-8 w-auto" />
+          <img src="/logo.png" alt="Aroha Logo" className="h-14 w-auto" />
         </div>
 
         <div className="flex-1">
