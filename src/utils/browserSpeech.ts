@@ -4,7 +4,7 @@
  * Works immediately, no downloads needed
  */
 
-export interface SpeechRecognitionResult {
+export interface SpeechRecognitionTranscription {
   transcription: string;
   timestamp: string;
   confidence?: number;
@@ -30,7 +30,7 @@ export async function transcribeWithBrowserAPI(_audioBlob: Blob): Promise<string
 }
 
 // Types for Web Speech API
-interface SpeechRecognitionWindow extends Window {
+interface SpeechRecognitionWindow {
   webkitSpeechRecognition?: new () => SpeechRecognition;
   SpeechRecognition?: new () => SpeechRecognition;
 }
@@ -81,7 +81,8 @@ export function createSpeechRecognition(options: {
   language?: string;
   continuous?: boolean;
 }): { start: () => void; stop: () => void } {
-  const SpeechRecognition = (window as SpeechRecognitionWindow).webkitSpeechRecognition || (window as SpeechRecognitionWindow).SpeechRecognition;
+  const win = window as unknown as SpeechRecognitionWindow;
+  const SpeechRecognition = win.webkitSpeechRecognition || win.SpeechRecognition;
   
   if (!SpeechRecognition) {
     throw new Error('Speech recognition not supported in this browser');

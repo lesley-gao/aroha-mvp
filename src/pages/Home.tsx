@@ -232,7 +232,7 @@ export function Home({ locale }: HomeProps) {
             </div>
             <div className="hidden md:block text-gray-400 text-2xl">→</div>
             <div className="flex items-center gap-4 bg-white/30 p-6 rounded-2xl shadow-md hover:shadow-lg  hover:scale-105 transition-shadow w-full md:w-64 h-36">
-              <div className="w-12 h-12 bg-[#D1F08B] text-black hover:bg-[#b8d66a] rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
+              <div className="w-12 h-12 bg-[#D1F08B] text-black rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
                 3
               </div>
               <span className="text-gray-700 font-medium text-left">
