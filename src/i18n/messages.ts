@@ -234,8 +234,8 @@ const messages: Record<Locale, Messages> = {
     ],
     
     appTitle: 'Aroha - Mental Health Support',
-    phq9Title: 'PHQ-9 Assessment',
-    historyTitle: 'Assessment History',
+    phq9Title: 'Assessment',
+    historyTitle: 'History',
     settingsTitle: 'Settings',
     privacyTitle: 'Privacy & Data',
     
