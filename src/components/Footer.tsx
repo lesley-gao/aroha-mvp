@@ -19,7 +19,7 @@ export function Footer() {
           {/* Text Content - Right */}
           <div className="order-1 md:order-2 text-center md:text-right flex flex-col h-full justify-between">
             <div>
-              <p className="text-gray-600 text-2xl my-4 font-bold">{t('footerMessage')}</p>
+              <p className="text-gray-600 text-2xl my-4 text-right font-bold">{t('footerMessage')}</p>
               <p className="text-indigo-400 mb-3 text-right">{t('footerDisclaimer')}</p>
             </div>
 
