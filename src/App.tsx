@@ -33,6 +33,8 @@ import {
   Pencil2Icon,
   ExitIcon,
   HomeIcon,
+  HamburgerMenuIcon,
+  Cross2Icon,
 } from "@radix-ui/react-icons";
 import "./App.css";
 
@@ -47,6 +49,7 @@ function AppContent() {
   const [pendingLocalCount, setPendingLocalCount] = useState<number>(0);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     // Check for existing Supabase session
@@ -162,6 +165,36 @@ function AppContent() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  type NavLinkItem = {
+    to: string;
+    label: string;
+    Icon: typeof HomeIcon;
+  };
+
+  const navLinks: NavLinkItem[] = [
+    { to: "/", label: t('navHome') as string, Icon: HomeIcon },
+    { to: "/phq9", label: t('phq9Title') as string, Icon: ReaderIcon },
+    { to: "/diary", label: t('diaryTitle') as string, Icon: Pencil2Icon },
+    { to: "/history", label: t('historyTitle') as string, Icon: ActivityLogIcon },
+    { to: "/settings", label: t('settingsTitle') as string, Icon: GearIcon },
+  ];
+
+  const navButtonClasses = (path: string) =>
+    `${isActive(path)
+      ? "bg-indigo-100 text-gray-900 shadow-sm"
+      : "text-gray-700 hover:text-gray-900"} w-full justify-start rounded-2xl px-4 py-3 text-base focus-visible:ring-indigo-400 transition-colors duration-150 md:w-auto md:justify-center md:rounded-full md:px-4 md:py-2 md:text-sm`;
+
+  const authButtonClasses =
+    "text-gray-700 hover:text-gray-900 w-full justify-start rounded-2xl px-4 py-3 text-base focus-visible:ring-indigo-400 transition-colors duration-150 md:w-auto md:justify-center md:rounded-full md:px-4 md:py-2 md:text-sm";
+
+  const handleNavItemClick = () => {
+    setIsMenuOpen(false);
+  };
+
   // If the route is the auth page, render it standalone (no header/footer)
   if (location.pathname.startsWith('/auth')) {
     return (
@@ -218,108 +251,56 @@ function AppContent() {
                   className="h-14 object-contain"
                 />
               </Link>
-              <nav
-                role="navigation"
-                aria-label="Main navigation"
-              >
+              <nav role="navigation" aria-label="Main navigation" className="relative">
+                <button
+                  type="button"
+                  className="md:hidden inline-flex items-center justify-center rounded-full bg-white/80 p-2 text-gray-700 shadow-md ring-1 ring-indigo-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                  aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={isMenuOpen}
+                  aria-controls="primary-navigation"
+                  onClick={() => setIsMenuOpen((prev) => !prev)}
+                >
+                  {isMenuOpen ? <Cross2Icon className="h-6 w-6" /> : <HamburgerMenuIcon className="h-6 w-6" />}
+                </button>
                 <div
-                  className="inline-flex items-center gap-2 rounded-full backdrop-blur px-2 py-2 ring-2 ring-indigo-200 shadow-lg"
+                  id="primary-navigation"
+                  className={`absolute right-0 top-16 z-40 w-84 flex-col gap-3 rounded-3xl bg-white/95 p-5 text-gray-800 shadow-2xl ring-1 ring-indigo-100 transition-all duration-300 ease-out md:static md:flex md:w-auto md:flex-row md:items-center md:gap-2 md:bg-transparent md:p-0 md:text-gray-700 md:shadow-none md:ring-0 ${
+                    isMenuOpen
+                      ? "flex scale-100 opacity-100 translate-y-0 pointer-events-auto"
+                      : "flex scale-95 opacity-0 -translate-y-2 pointer-events-none md:opacity-100 md:translate-y-0 md:scale-100 md:pointer-events-auto"
+                  }`}
                   role="tablist"
                   aria-label="Section tabs"
                 >
-                  <Link to="/">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/")}
-                    >
-                      <HomeIcon className="mr-2 h-4 w-4" aria-hidden /> {t('navHome')}
-                     </Button>
-                  </Link>
-                  <Link to="/phq9">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/phq9")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/phq9") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/phq9")}
-                    >
-                      <ReaderIcon className="mr-2 h-4 w-4" aria-hidden /> {t('phq9Title')}
-                    </Button>
-                  </Link>
-                  <Link to="/diary">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/diary")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/diary") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/diary")}
-                    >
-                      <Pencil2Icon className="mr-2 h-4 w-4" aria-hidden /> {t('diaryTitle')}
-                    </Button>
-                  </Link>
-                  <Link to="/history">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/history")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/history") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/history")}
+                  {navLinks.map(({ to, label, Icon }) => (
+                    <Link to={to} key={to} className="w-full md:w-auto">
+                      <Button
+                        variant="ghost"
+                        className={navButtonClasses(to)}
+                        aria-current={isActive(to) ? "page" : undefined}
+                        role="tab"
+                        aria-selected={isActive(to)}
+                        onClick={handleNavItemClick}
                       >
-                      <ActivityLogIcon className="mr-2 h-4 w-4" aria-hidden /> {t('historyTitle')}
-                    </Button>
-                  </Link>
-                  <Link to="/settings">
-                    <Button
-                      variant="ghost"
-                      className={
-                        (isActive("/settings")
-                          ? "bg-indigo-100 text-gray-900 shadow-sm "
-                          : "text-gray-700 hover:text-gray-900 ") +
-                        "rounded-full px-4 py-2 focus-visible:ring-indigo-400"
-                      }
-                      aria-current={isActive("/settings") ? "page" : undefined}
-                      role="tab"
-                      aria-selected={isActive("/settings")}
-                      >
-                      <GearIcon className="mr-2 h-4 w-4" aria-hidden /> {t('settingsTitle')}
-                    </Button>
-                  </Link>
+                        <Icon className="mr-2 h-4 w-4" aria-hidden />
+                        {label}
+                      </Button>
+                    </Link>
+                  ))}
                   {isAuthenticated ? (
                     <Button
                       variant="ghost"
                       onClick={handleLogout}
-                      className="text-gray-700 hover:text-gray-900 rounded-full px-4 py-2 focus-visible:ring-indigo-400"
+                      className={authButtonClasses}
                     >
                       <ExitIcon className="mr-2 h-4 w-4" aria-hidden /> {t('logoutButton')}
                     </Button>
                   ) : (
-                    <Link to="/auth">
+                    <Link to="/auth" className="w-full md:w-auto">
                       <Button
                         variant="ghost"
-                        className="text-gray-700 hover:text-gray-900 rounded-full px-4 py-2 focus-visible:ring-indigo-400"
+                        className={authButtonClasses}
+                        onClick={handleNavItemClick}
                       >
                         <ExitIcon className="mr-2 h-4 w-4" aria-hidden /> {t('loginButton')}
                       </Button>
